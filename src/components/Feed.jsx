@@ -13,7 +13,7 @@ const Feed = () => {
            <input 
              type="text" 
              placeholder="What's on your mind? 碗又空了？" 
-             className="flex-1 bg-gray-100 rounded-full px-4 outline-none hover:bg-gray-200 cursor-pointer"
+             className="flex-1 bg-gray-100 rounded-3xl px-4 outline-none hover:bg-gray-200 cursor-pointer"
             />
         </div>
         <div className="flex justify-evenly pt-3 text-gray-500 font-medium">
