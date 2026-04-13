@@ -3,6 +3,6 @@ import { getSupplyChainOverview } from '@/lib/supply-chain/service';
 
 export const runtime = 'nodejs';
 
-export function GET() {
-  return NextResponse.json(getSupplyChainOverview());
+export async function GET() {
+  return NextResponse.json(await getSupplyChainOverview());
 }

@@ -3,6 +3,6 @@ import { getPurchaseOrders } from '@/lib/supply-chain/service';
 
 export const runtime = 'nodejs';
 
-export function GET() {
-  return NextResponse.json(getPurchaseOrders());
+export async function GET() {
+  return NextResponse.json(await getPurchaseOrders());
 }

@@ -3,6 +3,6 @@ import { getInventory } from '@/lib/supply-chain/service';
 
 export const runtime = 'nodejs';
 
-export function GET() {
-  return NextResponse.json(getInventory());
+export async function GET() {
+  return NextResponse.json(await getInventory());
 }

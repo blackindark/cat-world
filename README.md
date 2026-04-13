@@ -93,6 +93,7 @@ npm run start
 ## Cloudflare 部署
 
 这个项目已经改造成“单项目部署”模式，目标是通过 OpenNext for Cloudflare 部署。
+同时已经配置了 Cloudflare D1 数据库绑定：`DB`。
 
 本地构建 Cloudflare 产物：
 
@@ -119,13 +120,15 @@ npm run cf:deploy
 
 ## 当前数据层说明
 
-当前仍是内存数据层，目的是先把 ERP 业务域与界面结构做正确。
-后续可以继续替换成：
+当前已经接入 Cloudflare D1 持久化，供应链数据会优先从 D1 读取。
+在本地如果没有 D1 绑定，则会自动退回到内存种子数据，方便继续开发。
 
-- D1 / PostgreSQL
-- KV / Redis
-- R2
-- Queue / Event Bus
+后续还可以继续扩展成：
+
+- D1 + 更完整事务建模
+- KV / Redis 作为缓存层
+- R2 作为附件/单据归档层
+- Queue / Event Bus 作为异步流程层
 
 ## 下一步建议
 

@@ -10,6 +10,8 @@ import {
   getWarehouses,
 } from '@/lib/supply-chain/service';
 
+export const dynamic = 'force-dynamic';
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat('zh-CN', {
     style: 'currency',
@@ -18,13 +20,15 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export default function Page() {
-  const overview = getSupplyChainOverview();
-  const suppliers = getSuppliers();
-  const warehouses = getWarehouses();
-  const inventory = getInventory();
-  const purchaseOrders = getPurchaseOrders();
-  const receipts = getReceipts();
+export default async function Page() {
+  const [overview, suppliers, warehouses, inventory, purchaseOrders, receipts] = await Promise.all([
+    getSupplyChainOverview(),
+    getSuppliers(),
+    getWarehouses(),
+    getInventory(),
+    getPurchaseOrders(),
+    getReceipts(),
+  ]);
 
   return (
     <AppShell>
@@ -34,7 +38,7 @@ export default function Page() {
             <p className="eyebrow">Next.js full-stack ERP</p>
             <h3>把采购、仓储、库存、收货和异常处理收束到一个可演示的 ERP 原型里。</h3>
             <p className="muted">
-              现在已经收敛成单个 Next.js 全栈项目：页面、API、内存数据层都在同一个工程里，方便直接部署到 Cloudflare。
+              当前已经接入 Cloudflare D1 持久化。页面、API、供应链领域模型和数据库绑定都在同一个 Next.js 工程里。
             </p>
           </div>
           <div className="hero-badges">
@@ -85,25 +89,11 @@ export default function Page() {
         <div className="two-column-grid">
           <SectionCard title="供应商矩阵" description="优先保证交付稳定性与战略供应安全。">
             <table className="data-table">
-              <thead>
-                <tr>
-                  <th>供应商</th>
-                  <th>类别</th>
-                  <th>区域</th>
-                  <th>交期</th>
-                  <th>准时率</th>
-                  <th>状态</th>
-                </tr>
-              </thead>
+              <thead><tr><th>供应商</th><th>类别</th><th>区域</th><th>交期</th><th>准时率</th><th>状态</th></tr></thead>
               <tbody>
                 {suppliers.map((supplier) => (
                   <tr key={supplier.id}>
-                    <td>{supplier.name}</td>
-                    <td>{supplier.category}</td>
-                    <td>{supplier.region}</td>
-                    <td>{supplier.leadTimeDays} 天</td>
-                    <td>{supplier.onTimeRate}%</td>
-                    <td><span className={`tag ${supplier.status}`}>{supplier.status}</span></td>
+                    <td>{supplier.name}</td><td>{supplier.category}</td><td>{supplier.region}</td><td>{supplier.leadTimeDays} 天</td><td>{supplier.onTimeRate}%</td><td><span className={`tag ${supplier.status}`}>{supplier.status}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -114,14 +104,8 @@ export default function Page() {
             <div className="stack-list">
               {overview.inventoryRisks.map((item) => (
                 <article key={item.id} className="stack-item">
-                  <div>
-                    <strong>{item.name}</strong>
-                    <p className="muted">{item.sku} · {item.category}</p>
-                  </div>
-                  <div className="metric-pair">
-                    <span>现存 {item.onHand}</span>
-                    <span>安全库存 {item.safetyStock}</span>
-                  </div>
+                  <div><strong>{item.name}</strong><p className="muted">{item.sku} · {item.category}</p></div>
+                  <div className="metric-pair"><span>现存 {item.onHand}</span><span>安全库存 {item.safetyStock}</span></div>
                 </article>
               ))}
             </div>
@@ -131,23 +115,11 @@ export default function Page() {
         <div className="two-column-grid wide-left">
           <SectionCard title="采购订单" description="供应链系统第一批关键交易单据。">
             <table className="data-table">
-              <thead>
-                <tr>
-                  <th>PO</th>
-                  <th>采购员</th>
-                  <th>状态</th>
-                  <th>ETA</th>
-                  <th>金额</th>
-                </tr>
-              </thead>
+              <thead><tr><th>PO</th><th>采购员</th><th>状态</th><th>ETA</th><th>金额</th></tr></thead>
               <tbody>
                 {purchaseOrders.map((order) => (
                   <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.buyer}</td>
-                    <td><span className={`tag ${order.status}`}>{order.status}</span></td>
-                    <td>{order.eta}</td>
-                    <td>{formatCurrency(order.amountCny)}</td>
+                    <td>{order.id}</td><td>{order.buyer}</td><td><span className={`tag ${order.status}`}>{order.status}</span></td><td>{order.eta}</td><td>{formatCurrency(order.amountCny)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -159,31 +131,18 @@ export default function Page() {
               <div className="stack-list compact">
                 {warehouses.map((warehouse) => (
                   <article key={warehouse.id} className="stack-item">
-                    <div>
-                      <strong>{warehouse.name}</strong>
-                      <p className="muted">{warehouse.city} · 容量 {warehouse.capacityUnits}</p>
-                    </div>
-                    <div className="metric-pair">
-                      <span>{warehouse.utilizationRate}%</span>
-                      <span className={`tag ${warehouse.riskLevel}`}>{warehouse.riskLevel}</span>
-                    </div>
+                    <div><strong>{warehouse.name}</strong><p className="muted">{warehouse.city} · 容量 {warehouse.capacityUnits}</p></div>
+                    <div className="metric-pair"><span>{warehouse.utilizationRate}%</span><span className={`tag ${warehouse.riskLevel}`}>{warehouse.riskLevel}</span></div>
                   </article>
                 ))}
               </div>
             </SectionCard>
-
             <SectionCard title="到货与质检" description="把收货环节做成可视化闭环。">
               <div className="stack-list compact">
                 {receipts.map((receipt) => (
                   <article key={receipt.id} className="stack-item">
-                    <div>
-                      <strong>{receipt.purchaseOrderId}</strong>
-                      <p className="muted">收货时间：{new Date(receipt.receivedAt).toLocaleString('zh-CN')}</p>
-                    </div>
-                    <div className="metric-pair">
-                      <span>{receipt.quantity} 件</span>
-                      <span>合格率 {receipt.qualityPassRate}%</span>
-                    </div>
+                    <div><strong>{receipt.purchaseOrderId}</strong><p className="muted">收货时间：{new Date(receipt.receivedAt).toLocaleString('zh-CN')}</p></div>
+                    <div className="metric-pair"><span>{receipt.quantity} 件</span><span>合格率 {receipt.qualityPassRate}%</span></div>
                   </article>
                 ))}
               </div>
@@ -191,28 +150,12 @@ export default function Page() {
           </div>
         </div>
 
-        <SectionCard title="库存台账快照" description="同一个 Next.js 项目里，页面和 API 共用内存领域模型。">
+        <SectionCard title="库存台账快照" description="现在这个页面优先从 D1 读取数据，本地无 D1 绑定时退回种子数据。">
           <table className="data-table">
-            <thead>
-              <tr>
-                <th>SKU</th>
-                <th>品名</th>
-                <th>分类</th>
-                <th>现存</th>
-                <th>安全库存</th>
-                <th>周转天数</th>
-              </tr>
-            </thead>
+            <thead><tr><th>SKU</th><th>品名</th><th>分类</th><th>现存</th><th>安全库存</th><th>周转天数</th></tr></thead>
             <tbody>
               {inventory.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.sku}</td>
-                  <td>{item.name}</td>
-                  <td>{item.category}</td>
-                  <td>{item.onHand}</td>
-                  <td>{item.safetyStock}</td>
-                  <td>{item.turnoverDays}</td>
-                </tr>
+                <tr key={item.id}><td>{item.sku}</td><td>{item.name}</td><td>{item.category}</td><td>{item.onHand}</td><td>{item.safetyStock}</td><td>{item.turnoverDays}</td></tr>
               ))}
             </tbody>
           </table>
@@ -220,22 +163,10 @@ export default function Page() {
 
         <SectionCard title="ERP 后续扩展" description="供应链打底后，后面的模块就顺了。">
           <div className="roadmap-grid">
-            <article className="roadmap-item">
-              <strong>采购结算</strong>
-              <p className="muted">把 PO、收货、发票、应付三单匹配串起来。</p>
-            </article>
-            <article className="roadmap-item">
-              <strong>制造执行</strong>
-              <p className="muted">工单、BOM、齐套校验、产线节拍与异常停机。</p>
-            </article>
-            <article className="roadmap-item">
-              <strong>质量追溯</strong>
-              <p className="muted">来料检验、批次、缺陷闭环与召回链路。</p>
-            </article>
-            <article className="roadmap-item">
-              <strong>主数据治理</strong>
-              <p className="muted">物料、供应商、仓位、组织、计量单位统一治理。</p>
-            </article>
+            <article className="roadmap-item"><strong>采购结算</strong><p className="muted">把 PO、收货、发票、应付三单匹配串起来。</p></article>
+            <article className="roadmap-item"><strong>制造执行</strong><p className="muted">工单、BOM、齐套校验、产线节拍与异常停机。</p></article>
+            <article className="roadmap-item"><strong>质量追溯</strong><p className="muted">来料检验、批次、缺陷闭环与召回链路。</p></article>
+            <article className="roadmap-item"><strong>主数据治理</strong><p className="muted">物料、供应商、仓位、组织、计量单位统一治理。</p></article>
           </div>
         </SectionCard>
       </div>

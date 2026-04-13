@@ -11,3 +11,8 @@ binding = "ASSETS"
 [[services]]
 binding = "WORKER_SELF_REFERENCE"
 service = "northstar-erp-next"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "northstar-erp-d1"
+database_id = "1509ec0f-9457-4b1e-9069-bb4c49419a1b"
