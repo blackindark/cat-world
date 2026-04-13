@@ -1,0 +1,5 @@
+name = "northstar-erp-next"
+main = ".open-next/worker.js"
+compatibility_date = "2026-04-13"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true

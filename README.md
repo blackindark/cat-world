@@ -1,16 +1,145 @@
-# React + Vite
+# Northstar ERP / Next.js Full-Stack Supply Chain Workbench
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+这个仓库现在已经重构成单个 Next.js 全栈项目：
 
-Currently, two official plugins are available:
+- Next.js App Router
+- 页面与 API 共用同一套供应链领域模型
+- 内存行数据库式数据层
+- 面向 Cloudflare 的单项目部署
+- 当前优先域：供应链系统
+- 设计规范：根目录 `DESIGN.md`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 当前结构
 
-## React Compiler
+```text
+.
+├── app
+│   ├── api
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components
+├── lib
+│   └── supply-chain
+├── public
+├── DESIGN.md
+├── next.config.ts
+└── wrangler.toml
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 已完成内容
 
-## Expanding the ESLint configuration
+### 1) 单项目全栈化
+原本的 React 前端 + NestJS API 已收敛成一个 Next.js 工程：
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- UI 页面在 `app/page.tsx`
+- API 路由在 `app/api/**/route.ts`
+- 领域数据与聚合逻辑在 `lib/supply-chain/*`
+
+### 2) 供应链接口
+可用接口：
+
+- `GET /api/health`
+- `GET /api/supply-chain/overview`
+- `GET /api/supply-chain/suppliers`
+- `GET /api/supply-chain/warehouses`
+- `GET /api/supply-chain/inventory`
+- `GET /api/supply-chain/purchase-orders`
+- `GET /api/supply-chain/receipts`
+
+### 3) 首页
+首页就是供应链控制塔，包含：
+
+- KPI 指标卡
+- 采购流程看板
+- 异常中心
+- 供应商矩阵
+- 库存风险清单
+- 采购订单列表
+- 仓储网络
+- 到货与质检
+- 库存台账快照
+- ERP 后续模块路线图
+
+## 本地开发
+
+安装依赖：
+
+```bash
+npm install
+```
+
+启动开发：
+
+```bash
+npm run dev
+```
+
+打开：
+
+```text
+http://localhost:3100
+```
+
+说明：这台机器的 `3000` 和 `3001` 端口已经被其他本地服务占用，所以本项目开发端口改成了 `3100`。
+
+## 生产构建
+
+```bash
+npm run build
+npm run start
+```
+
+## Cloudflare 部署
+
+这个项目已经改造成“单项目部署”模式，目标是通过 OpenNext for Cloudflare 部署。
+
+本地构建 Cloudflare 产物：
+
+```bash
+npm run cf:build
+```
+
+本地预览 Cloudflare Worker：
+
+```bash
+npm run cf:preview
+```
+
+部署到 Cloudflare：
+
+```bash
+npm run cf:deploy
+```
+
+说明：
+- `wrangler.toml` 已补齐
+- 需要本机先完成 `wrangler login`
+- 项目会作为单个 Cloudflare Worker / Next.js 应用部署
+
+## 当前数据层说明
+
+当前仍是内存数据层，目的是先把 ERP 业务域与界面结构做正确。
+后续可以继续替换成：
+
+- D1 / PostgreSQL
+- KV / Redis
+- R2
+- Queue / Event Bus
+
+## 下一步建议
+
+下一阶段最值得继续做的是：
+
+1. 采购申请 -> 审批 -> PO -> 收货闭环
+2. 供应商主数据维护
+3. 库存台账与出入库流水
+4. 安全库存与补货建议
+5. 质检闭环
+6. 权限体系与组织架构
+
+## 文档
+
+- `DESIGN.md`
+- `docs/plans/2026-04-13-erp-supply-chain-refactor-plan.md`
+- `docs/deployment/cloudflare-pages-and-api.md`（旧的双服务部署说明，现可作为迁移参考）
