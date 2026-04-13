@@ -15,6 +15,7 @@ dist-ssr
 apps/
 .open-next/
 .next/
+.wrangler/
 
 # Editor directories and files
 .vscode/*
