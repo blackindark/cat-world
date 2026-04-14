@@ -5,11 +5,14 @@ import { EcommerceWorkbench } from '@/components/ecommerce/EcommerceWorkbench';
 import {
   getAfterSalesTickets,
   getCampaigns,
+  getCartItems,
   getCategories,
   getCustomers,
   getEcommerceOverview,
+  getPaymentRecords,
   getProducts,
   getSalesOrders,
+  getShipmentRecords,
 } from '@/lib/ecommerce/service';
 
 export const dynamic = 'force-dynamic';
@@ -23,7 +26,7 @@ function formatCurrency(valueCents: number) {
 }
 
 export default async function Page() {
-  const [overview, categories, products, customers, orders, campaigns, afterSales] = await Promise.all([
+  const [overview, categories, products, customers, orders, campaigns, afterSales, cartItems, payments, shipments] = await Promise.all([
     getEcommerceOverview(),
     getCategories(),
     getProducts(),
@@ -31,6 +34,9 @@ export default async function Page() {
     getSalesOrders(),
     getCampaigns(),
     getAfterSalesTickets(),
+    getCartItems(),
+    getPaymentRecords(),
+    getShipmentRecords(),
   ]);
 
   return (
@@ -41,15 +47,15 @@ export default async function Page() {
             <p className="eyebrow">Professional ecommerce architecture workbench</p>
             <h3>把前台商城、交易履约、中后台运营、数据架构和技术架构都拉进同一个可学习、可演示、可落库的电商平台工作台。</h3>
             <p className="muted">
-              当前版本已经把业务重心切换为电商系统，并开始接入真实 D1 业务动作：新增商品、沉淀顾客档案、模拟前台下单。这个仓库现在更适合做产品架构和技术架构学习样本。
+              当前版本已经把业务重心切换为电商系统，并开始接入真实 D1 业务动作：商品中心、顾客档案、购物车、结算、订单流转、支付、物流、售后。这个仓库已经不只是看概念，而是可以用来学习专业电商平台领域模型。
             </p>
           </div>
           <div className="hero-badges">
             <span>Storefront</span>
             <span>Admin</span>
-            <span>Transaction</span>
-            <span>Fulfillment</span>
-            <span>CRM</span>
+            <span>Order lifecycle</span>
+            <span>After-sales</span>
+            <span>Payment</span>
             <span>Data architecture</span>
           </div>
         </section>
@@ -111,10 +117,10 @@ export default async function Page() {
           <div className="section-header">
             <div>
               <h3>电商业务操作台</h3>
-              <p className="muted">这里开始做真实后台动作：商品、顾客、订单都可以写入 D1，已经不只是展示层。</p>
+              <p className="muted">这里开始做真实后台动作：商品、顾客、购物车、结算、订单流转、售后都可以写入 D1。</p>
             </div>
           </div>
-          <EcommerceWorkbench categories={categories} products={products} customers={customers} />
+          <EcommerceWorkbench categories={categories} products={products} customers={customers} orders={orders} />
         </section>
 
         <div className="two-column-grid">
@@ -199,6 +205,52 @@ export default async function Page() {
               </div>
             </SectionCard>
           </div>
+        </div>
+
+        <div className="two-column-grid wide-left">
+          <SectionCard title="购物车与结算链路" description="前台从加购到支付前结算，是转化核心路径。">
+            <table className="data-table">
+              <thead><tr><th>购物车项</th><th>顾客</th><th>商品</th><th>渠道</th><th>数量</th></tr></thead>
+              <tbody>
+                {cartItems.map((item) => {
+                  const customer = customers.find((entry) => entry.id === item.customerId);
+                  const product = products.find((entry) => entry.id === item.productId);
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.id}</td>
+                      <td>{customer?.name ?? item.customerId}</td>
+                      <td>{product?.name ?? item.productId}</td>
+                      <td>{item.channel}</td>
+                      <td>{item.quantity}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </SectionCard>
+
+          <SectionCard title="支付与物流记录" description="电商平台要能解释支付单、发货单、运单的边界。">
+            <div className="two-column-grid equal-grid inner-grid">
+              <div className="stack-list compact">
+                {payments.map((payment) => (
+                  <article key={payment.id} className="stack-item vertical compact-card">
+                    <strong>{payment.id}</strong>
+                    <p className="muted">{payment.orderId} · {payment.method}</p>
+                    <div className="metric-pair left"><span>{payment.status}</span><span>{formatCurrency(payment.amountCents)}</span></div>
+                  </article>
+                ))}
+              </div>
+              <div className="stack-list compact">
+                {shipments.map((shipment) => (
+                  <article key={shipment.id} className="stack-item vertical compact-card">
+                    <strong>{shipment.orderId}</strong>
+                    <p className="muted">{shipment.carrier} · {shipment.trackingNo}</p>
+                    <div className="metric-pair left"><span>{shipment.status}</span><span>{shipment.warehouseCode}</span></div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </SectionCard>
         </div>
       </div>
     </AppShell>

@@ -1,4 +1,15 @@
-import type { AfterSalesTicket, Customer, EcommerceOverview, Product, ProductCategory, PromotionCampaign, SalesOrder } from './types';
+import type {
+  AfterSalesTicket,
+  CartItem,
+  Customer,
+  EcommerceOverview,
+  PaymentRecord,
+  Product,
+  ProductCategory,
+  PromotionCampaign,
+  SalesOrder,
+  ShipmentRecord,
+} from './types';
 
 export const ecommerceSeed = {
   categories: [
@@ -27,6 +38,18 @@ export const ecommerceSeed = {
   afterSales: [
     { id: 'AFT-001', orderId: 'ORD-001', type: 'refund', status: 'reviewing', reason: '用户申请差价补偿', createdAt: '2026-04-12T18:00:00.000Z' },
   ] as AfterSalesTicket[],
+  cartItems: [
+    { id: 'CRT-001', customerId: 'CUS-001', productId: 'PRD-002', channel: 'app', quantity: 1, selected: true, createdAt: '2026-04-13T08:00:00.000Z' },
+    { id: 'CRT-002', customerId: 'CUS-002', productId: 'PRD-003', channel: 'miniapp', quantity: 2, selected: true, createdAt: '2026-04-13T10:30:00.000Z' },
+  ] as CartItem[],
+  payments: [
+    { id: 'PAY-001', orderId: 'ORD-001', method: 'alipay', amountCents: 599900, status: 'paid', paidAt: '2026-04-10T08:35:00.000Z' },
+    { id: 'PAY-002', orderId: 'ORD-002', method: 'wechatpay', amountCents: 25800, status: 'paid', paidAt: '2026-04-11T15:22:00.000Z' },
+  ] as PaymentRecord[],
+  shipments: [
+    { id: 'SHP-001', orderId: 'ORD-001', warehouseCode: 'SH-CDC-01', carrier: '顺丰', trackingNo: 'SF123456789CN', status: 'shipped', shippedAt: '2026-04-10T14:00:00.000Z', deliveredAt: null },
+    { id: 'SHP-002', orderId: 'ORD-002', warehouseCode: 'HZ-FWD-03', carrier: '京东物流', trackingNo: 'JD9988776655', status: 'delivered', shippedAt: '2026-04-11T18:00:00.000Z', deliveredAt: '2026-04-12T12:20:00.000Z' },
+  ] as ShipmentRecord[],
   overview: {
     kpis: {
       activeProducts: 3,
