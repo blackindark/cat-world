@@ -3,6 +3,8 @@ import { KpiCard } from '@/components/supply-chain/KpiCard';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { AppShell } from '@/components/layout/AppShell';
 import { InteractiveShowcase } from '@/components/language/InteractiveShowcase';
+import { MascotGuide } from '@/components/language/MascotGuide';
+import { PlayfulLessonDemo } from '@/components/language/PlayfulLessonDemo';
 
 const focusTracks = [
   {
@@ -160,6 +162,8 @@ export default function Page() {
         </section>
 
         <InteractiveShowcase />
+        <MascotGuide />
+        <PlayfulLessonDemo />
 
         <SectionCard title="这次重点提升的是体验密度" description="不是只换皮，而是把首页本身做得更有响应感、更愿意点。">
           <div className="value-grid">

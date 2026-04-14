@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { getLanguageTrack, getLesson } from '@/lib/language/data';
+import { MascotGuide } from '@/components/language/MascotGuide';
+import { PlayfulLessonDemo } from '@/components/language/PlayfulLessonDemo';
 
 const missionTypeLabel = {
   speak: '口语',
@@ -42,6 +44,8 @@ export default async function LessonPage({ params }: { params: Promise<{ track: 
           </div>
         </section>
 
+        <PlayfulLessonDemo />
+
         <SectionCard title="任务流" description="一节课里不要塞太多概念，而是让用户持续完成小反馈。">
           <div id="missions" className="mission-flow-list">
             {currentLesson.missions.map((mission, index) => (
@@ -63,6 +67,8 @@ export default async function LessonPage({ params }: { params: Promise<{ track: 
             ))}
           </div>
         </SectionCard>
+
+        <MascotGuide />
 
         <div className="two-panel-grid">
           <SectionCard title="本课结束后你会得到什么" description="保持一课一目标，用户更容易坚持。">

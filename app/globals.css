@@ -900,14 +900,369 @@ button, input, select, textarea { font: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .floating-card,
-  .wave-bars span {
+  .wave-bars span,
+  .mascot-figure,
+  .mascot-hand,
+  .mascot-mouth,
+  .reaction-face {
     animation: none;
   }
 
   .mission-toggle,
-  .next-link-card {
+  .next-link-card,
+  .challenge-option,
+  .mascot-mood {
     transition: none;
   }
+}
+
+.mascot-stage {
+  overflow: hidden;
+}
+
+.mascot-grid,
+.playful-lesson-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.mascot-figure-wrap,
+.mascot-console,
+.challenge-console,
+.mascot-reaction-card,
+.lesson-party-card {
+  position: relative;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.84);
+  border: 1px solid rgba(23, 50, 31, 0.06);
+}
+
+.mascot-figure-wrap {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 213, 79, 0.35), transparent 28%),
+    radial-gradient(circle at 80% 15%, rgba(28,176,246,0.18), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,252,244,0.94));
+}
+
+.mascot-figure {
+  position: relative;
+  width: 220px;
+  margin: 8px auto 0;
+  padding-top: 8px;
+  animation: mascotBounce 3.6s ease-in-out infinite;
+}
+
+.mascot-body {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin: 0 auto;
+  border-radius: 44% 44% 40% 40%;
+  background: linear-gradient(180deg, #ffffff, #f7fbe9 70%);
+  border: 6px solid #17321f;
+  box-shadow: 0 18px 28px rgba(23, 50, 31, 0.12);
+}
+
+.mascot-ear {
+  position: absolute;
+  top: 6px;
+  width: 44px;
+  height: 58px;
+  border-radius: 999px 999px 14px 14px;
+  background: #fff6c9;
+  border: 6px solid #17321f;
+}
+
+.mascot-ear.left { left: 30px; transform: rotate(-18deg); }
+.mascot-ear.right { right: 30px; transform: rotate(18deg); }
+
+.mascot-face {
+  position: absolute;
+  inset: 38px 28px auto;
+  height: 74px;
+}
+
+.mascot-eye {
+  position: absolute;
+  top: 12px;
+  width: 18px;
+  height: 24px;
+  border-radius: 999px;
+  background: #17321f;
+}
+
+.mascot-eye.left { left: 28px; }
+.mascot-eye.right { right: 28px; }
+
+.mascot-mouth {
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  width: 34px;
+  height: 18px;
+  margin-left: -17px;
+  border-bottom: 5px solid #17321f;
+  border-radius: 0 0 999px 999px;
+  animation: mouthWiggle 2.2s ease-in-out infinite;
+}
+
+.mascot-blush {
+  position: absolute;
+  top: 40px;
+  width: 22px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 117, 143, 0.35);
+}
+
+.mascot-blush.left { left: 8px; }
+.mascot-blush.right { right: 8px; }
+
+.mascot-belly {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff6c9;
+  border: 4px solid #17321f;
+  font-size: 28px;
+}
+
+.mascot-hand,
+.mascot-foot {
+  position: absolute;
+  background: #fff;
+  border: 6px solid #17321f;
+}
+
+.mascot-hand {
+  top: 118px;
+  width: 36px;
+  height: 70px;
+  border-radius: 999px;
+  animation: armFlap 1.9s ease-in-out infinite;
+}
+
+.mascot-hand.left { left: 8px; transform-origin: top right; }
+.mascot-hand.right { right: 8px; transform-origin: top left; animation-delay: 0.4s; }
+
+.mascot-foot {
+  bottom: -4px;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+}
+
+.mascot-foot.left { left: 56px; }
+.mascot-foot.right { right: 56px; }
+
+.mascot-shadow {
+  width: 120px;
+  height: 20px;
+  margin: 10px auto 0;
+  border-radius: 999px;
+  background: rgba(23,50,31,0.12);
+}
+
+.mascot-figure.chaos .mascot-body {
+  transform: rotate(-4deg);
+}
+
+.mascot-figure.wink .mascot-eye.right {
+  height: 6px;
+  top: 22px;
+}
+
+.mascot-badges,
+.mascot-mood-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.mascot-mood {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(23, 50, 31, 0.06);
+  font: inherit;
+  font-weight: 700;
+  color: var(--muted);
+  transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.mascot-mood.active {
+  background: rgba(88, 204, 2, 0.16);
+  color: #2e7d00;
+  transform: translateY(-1px);
+}
+
+.mascot-bubble-card {
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,248,225,0.94));
+  border: 1px solid rgba(23, 50, 31, 0.06);
+}
+
+.mascot-bubble-card strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+}
+
+.fun-button {
+  cursor: pointer;
+}
+
+.fun-outline-button {
+  appearance: none;
+  cursor: pointer;
+}
+
+.playful-lesson {
+  overflow: hidden;
+}
+
+.challenge-console.win {
+  box-shadow: 0 18px 30px rgba(88, 204, 2, 0.14);
+}
+
+.challenge-console.lose {
+  box-shadow: 0 18px 30px rgba(255, 117, 143, 0.14);
+}
+
+.challenge-topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.challenge-progress-track {
+  width: 100%;
+  height: 14px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: rgba(23,50,31,0.08);
+  overflow: hidden;
+}
+
+.challenge-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.challenge-console h4,
+.lesson-party-card h4 {
+  margin: 18px 0 0;
+  font-size: 30px;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.challenge-options {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.challenge-option {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.96);
+  border: 2px solid transparent;
+  font: inherit;
+  font-weight: 700;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.challenge-option:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(23,50,31,0.08);
+}
+
+.challenge-option.correct {
+  border-color: rgba(88, 204, 2, 0.5);
+  background: rgba(232,255,226,0.95);
+}
+
+.challenge-option.wrong {
+  border-color: rgba(255, 117, 143, 0.5);
+  background: rgba(255,239,244,0.98);
+}
+
+.challenge-feedback {
+  min-height: 88px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(246,252,244,0.92);
+}
+
+.lesson-party-card {
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,213,79,0.24), transparent 28%),
+    radial-gradient(circle at 80% 15%, rgba(88,204,2,0.2), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,252,244,0.94));
+}
+
+.party-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(88,204,2,0.14);
+  color: #2e7d00;
+  font-weight: 800;
+}
+
+.mascot-reaction-card {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(234,241,255,0.92));
+}
+
+.reaction-face {
+  font-size: 72px;
+  line-height: 1;
+  animation: floatCard 3.8s ease-in-out infinite;
+}
+
+@keyframes mascotBounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes armFlap {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(-16deg); }
+}
+
+@keyframes mouthWiggle {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.78); }
 }
 
 @media (min-width: 768px) {
@@ -942,7 +1297,9 @@ button, input, select, textarea { font: inherit; }
   .curriculum-grid,
   .track-grid,
   .two-panel-grid,
-  .interactive-lab-grid {
+  .interactive-lab-grid,
+  .mascot-grid,
+  .playful-lesson-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
