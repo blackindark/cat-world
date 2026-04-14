@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircleMore, Mic2, Send, Sparkles, Users } from 'lucide-react';
+import { Hash, MessageCircleMore, Mic2, Send, Sparkles, Users } from 'lucide-react';
 
 type ChatMode = 'direct' | 'group';
 
@@ -19,10 +19,20 @@ type Thread = {
   subtitle: string;
   badge: string;
   online: string;
+  roomNote?: string;
+  participants?: string[];
+  unread?: number;
   messages: Message[];
 };
 
-const STORAGE_KEY = 'lingo-sprint-im-state-v1';
+type PersistedState = {
+  mode?: ChatMode;
+  directThreads?: Thread[];
+  groupThreads?: Thread[];
+  selectedId?: string;
+};
+
+const STORAGE_KEY = 'lingo-sprint-im-state-v2';
 
 const initialDirectThreads: Thread[] = [
   {
@@ -31,6 +41,7 @@ const initialDirectThreads: Thread[] = [
     subtitle: '刚刚催你去完成口语 streak',
     badge: '1v1',
     online: 'online',
+    unread: 0,
     messages: [
       { id: 'd1', sender: 'Mika', text: '今晚要不要一起练点餐英语？' },
       { id: 'd2', sender: 'You', text: '可以，我想顺便练一下更自然的语气。', mine: true },
@@ -43,9 +54,11 @@ const initialDirectThreads: Thread[] = [
     subtitle: '分享了一个旅行问路句型',
     badge: '1v1',
     online: 'typing…',
+    unread: 2,
     messages: [
       { id: 'd4', sender: 'Ren', text: '駅は どこですか 这句我今天终于顺口了。' },
       { id: 'd5', sender: 'You', text: '我还在跟语调打架。', mine: true },
+      { id: 'd6', sender: 'Ren', text: '你可以先把语调做得夸张一点，反而更容易记住。' },
     ],
   },
 ];
@@ -57,10 +70,15 @@ const initialGroupThreads: Thread[] = [
     subtitle: '7 人在线 · 深夜口语群',
     badge: 'Group',
     online: '7 online',
+    roomNote: '今夜主题：30 秒口语接龙',
+    participants: ['Nora', 'Bo', 'Mika', 'Yann', 'You'],
+    unread: 4,
     messages: [
       { id: 'g1', sender: 'Nora', text: '来个 30 秒自我介绍 challenge？' },
       { id: 'g2', sender: 'Bo', text: '输的人发今天最尴尬的中式英语。' },
-      { id: 'g3', sender: 'You', text: '我准备好了，但请先别嘲笑我。', mine: true },
+      { id: 'g3', sender: 'Mika', text: '我先来：Hi, I am Mika and I survive on coffee and last-minute courage.' },
+      { id: 'g4', sender: 'You', text: '我准备好了，但请先别嘲笑我。', mine: true },
+      { id: 'g5', sender: 'Yann', text: '笑不会，起哄会。你先开口。' },
     ],
   },
   {
@@ -69,9 +87,14 @@ const initialGroupThreads: Thread[] = [
     subtitle: '12 人在线 · 日语旅行群',
     badge: 'Group',
     online: '12 online',
+    roomNote: '今夜主题：怎么优雅问路',
+    participants: ['Yuki', 'Sena', 'Ren', 'Aoi', 'You'],
+    unread: 1,
     messages: [
-      { id: 'g4', sender: 'Yuki', text: '今天主题：怎么问地铁换乘最自然。' },
-      { id: 'g5', sender: 'Sena', text: '我先来一句，大家帮我挑毛病。' },
+      { id: 'g6', sender: 'Yuki', text: '今天主题：怎么问地铁换乘最自然。' },
+      { id: 'g7', sender: 'Sena', text: '我先来一句，大家帮我挑毛病。' },
+      { id: 'g8', sender: 'Ren', text: 'すみません、山手線はどこですか。 这句真的很常用。' },
+      { id: 'g9', sender: 'Aoi', text: '别忘了先说 すみません，语气会柔很多。' },
     ],
   },
 ];
@@ -82,6 +105,38 @@ const quickReplies = [
   '谁来陪我冲 streak',
   '发一个更地道的版本给我',
 ];
+
+const directAutoReplies: Record<string, string[]> = {
+  'dm-1': [
+    '那你先说一句，我来帮你把语气修顺。',
+    '我觉得你今晚完全可以冲一轮 cafe roleplay。',
+    '把你刚刚那句发我，我给你改成更自然的版本。',
+  ],
+  'dm-2': [
+    '你可以先把语调拉高一点，再慢慢收回来。',
+    '我陪你练一轮问路句，先别怕卡壳。',
+    '把你想说的中文发我，我帮你转成自然日语。',
+  ],
+};
+
+const groupAutoReplies: Record<string, { sender: string; text: string }[]> = {
+  'grp-1': [
+    { sender: 'Nora', text: '我看到新消息了，谁先来做 30 秒英语口语接龙？' },
+    { sender: 'Bo', text: '这句有戏，顺手再补一个更口语化版本？' },
+    { sender: 'Mika', text: '我来当你的临时口语搭子，直接接着说。' },
+    { sender: 'Yann', text: '群里已经准备好围观你开口了，别跑。' },
+  ],
+  'grp-2': [
+    { sender: 'Yuki', text: '这个表达已经挺自然了，可以再柔一点。' },
+    { sender: 'Sena', text: '我给你补一个旅行里更常用的说法。' },
+    { sender: 'Ren', text: '这句放在车站场景很实用，我刚好昨天用过。' },
+    { sender: 'Aoi', text: '你先说，我来帮你挑最像日语母语者会说的版本。' },
+  ],
+};
+
+function pickOne<T>(items: T[]) {
+  return items[Math.floor(Math.random() * items.length)];
+}
 
 export function IMPlayground() {
   const [mode, setMode] = useState<ChatMode>('direct');
@@ -99,12 +154,7 @@ export function IMPlayground() {
         setHydrated(true);
         return;
       }
-      const parsed = JSON.parse(raw) as {
-        mode?: ChatMode;
-        directThreads?: Thread[];
-        groupThreads?: Thread[];
-        selectedId?: string;
-      };
+      const parsed = JSON.parse(raw) as PersistedState;
       if (parsed.mode) setMode(parsed.mode);
       if (parsed.directThreads?.length) setDirectThreads(parsed.directThreads);
       if (parsed.groupThreads?.length) setGroupThreads(parsed.groupThreads);
@@ -141,6 +191,50 @@ export function IMPlayground() {
     setDraft('');
   }
 
+  function markRead(threadId: string, nextMode: ChatMode) {
+    if (nextMode === 'direct') {
+      setDirectThreads((current) => current.map((thread) => (thread.id === threadId ? { ...thread, unread: 0 } : thread)));
+    } else {
+      setGroupThreads((current) => current.map((thread) => (thread.id === threadId ? { ...thread, unread: 0 } : thread)));
+    }
+  }
+
+  function queueReply(threadId: string, currentMode: ChatMode) {
+    const delay = currentMode === 'group' ? 900 : 1200;
+    window.setTimeout(() => {
+      if (currentMode === 'direct') {
+        const text = pickOne(directAutoReplies[threadId] ?? ['收到，我来陪你继续练。']);
+        const sender = threadId === 'dm-2' ? 'Ren' : 'Mika';
+        setDirectThreads((current) =>
+          current.map((thread) =>
+            thread.id === threadId
+              ? {
+                  ...thread,
+                  subtitle: '对方刚刚回复了你',
+                  unread: thread.id === selectedId && mode === 'direct' ? 0 : (thread.unread ?? 0) + 1,
+                  messages: [...thread.messages, { id: `${thread.id}-${Date.now()}`, sender, text }],
+                }
+              : thread,
+          ),
+        );
+      } else {
+        const payload = pickOne(groupAutoReplies[threadId] ?? [{ sender: 'Teammate', text: '群里正在等你下一句。' }]);
+        setGroupThreads((current) =>
+          current.map((thread) =>
+            thread.id === threadId
+              ? {
+                  ...thread,
+                  subtitle: `${payload.sender} 刚刚在群里接话了`,
+                  unread: thread.id === selectedId && mode === 'group' ? 0 : (thread.unread ?? 0) + 1,
+                  messages: [...thread.messages, { id: `${thread.id}-${Date.now()}`, sender: payload.sender, text: payload.text }],
+                }
+              : thread,
+          ),
+        );
+      }
+    }, delay);
+  }
+
   function sendMessage() {
     const text = draft.trim();
     if (!text) return;
@@ -158,7 +252,8 @@ export function IMPlayground() {
           thread.id === selectedId
             ? {
                 ...thread,
-                subtitle: '刚刚收到一条新消息',
+                subtitle: '你刚刚发出一条消息',
+                unread: 0,
                 messages: [...thread.messages, nextMessage],
               }
             : thread,
@@ -170,7 +265,8 @@ export function IMPlayground() {
           thread.id === selectedId
             ? {
                 ...thread,
-                subtitle: '刚刚收到一条新消息',
+                subtitle: '你刚刚在群里发言',
+                unread: 0,
                 messages: [...thread.messages, nextMessage],
               }
             : thread,
@@ -178,6 +274,7 @@ export function IMPlayground() {
       );
     }
 
+    queueReply(selectedId, mode);
     setDraft('');
   }
 
@@ -213,11 +310,22 @@ export function IMPlayground() {
               type="button"
               key={thread.id}
               className={thread.id === selectedThread.id ? 'im-thread active' : 'im-thread'}
-              onClick={() => setSelectedId(thread.id)}
+              onClick={() => {
+                setSelectedId(thread.id);
+                markRead(thread.id, mode);
+              }}
             >
               <div className="im-thread-topline">
-                <span className="soft-chip">{thread.badge}</span>
-                <span className="im-presence">{thread.online}</span>
+                <div className="im-thread-badges">
+                  <span className="soft-chip">{thread.badge}</span>
+                  {thread.roomNote ? (
+                    <span className="soft-chip subtle-chip"><Hash size={12} /> 房间</span>
+                  ) : null}
+                </div>
+                <div className="im-thread-meta">
+                  <span className="im-presence">{thread.online}</span>
+                  {(thread.unread ?? 0) > 0 ? <span className="im-unread-pill">{thread.unread}</span> : null}
+                </div>
               </div>
               <strong>{thread.title}</strong>
               <p className="muted">{thread.subtitle}</p>
@@ -231,9 +339,20 @@ export function IMPlayground() {
           <div>
             <strong>{selectedThread.title}</strong>
             <p className="muted">{selectedThread.subtitle}</p>
+            {selectedThread.roomNote ? <p className="im-room-note">#{selectedThread.roomNote}</p> : null}
           </div>
           <span className="soft-chip">Mood sync on</span>
         </div>
+
+        {selectedThread.participants?.length ? (
+          <div className="im-participants-row">
+            {selectedThread.participants.map((name) => (
+              <span key={name} className="im-chip participant-chip">
+                <Users size={12} /> {name}
+              </span>
+            ))}
+          </div>
+        ) : null}
 
         <AnimatePresence mode="wait">
           <motion.div
