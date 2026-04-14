@@ -1,20 +1,31 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const primaryNav = [
   { label: '首页', href: '/' },
-  { label: '英语路径', href: '/learn/english' },
-  { label: '日语路径', href: '/learn/japanese' },
-  { label: 'AI 教练', href: '/lesson/english/small-talk-at-work' },
+  { label: 'Learn', href: '/learn' },
+  { label: 'Review', href: '/review' },
+  { label: 'Coach', href: '/coach' },
+  { label: 'Me', href: '/me' },
 ];
 
 const bottomNav = [
-  { label: 'Learn', href: '/learn/english' },
-  { label: 'Review', href: '/learn/japanese' },
-  { label: 'Coach', href: '/lesson/english/small-talk-at-work' },
-  { label: 'Me', href: '/' },
+  { label: 'Learn', href: '/learn' },
+  { label: 'Review', href: '/review' },
+  { label: 'Coach', href: '/coach' },
+  { label: 'Me', href: '/me' },
 ];
 
+function isActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -23,20 +34,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <strong className="brand-title">Lingo Sprint</strong>
         </div>
         <nav className="desktop-nav" aria-label="primary navigation">
-          {primaryNav.map((item, index) => (
-            <Link href={item.href} key={item.label} className={index === 0 ? 'nav-pill active' : 'nav-pill'}>
+          {primaryNav.map((item) => (
+            <Link href={item.href} key={item.label} className={isActive(pathname, item.href) ? 'nav-pill active' : 'nav-pill'}>
               {item.label}
             </Link>
           ))}
         </nav>
-        <Link href="/learn/english" className="header-cta">开始学习</Link>
+        <Link href="/learn" className="header-cta">开始学习</Link>
       </header>
 
       <main className="app-content">{children}</main>
 
       <nav className="mobile-bottom-nav" aria-label="mobile navigation">
-        {bottomNav.map((item, index) => (
-          <Link href={item.href} key={item.label} className={index === 0 ? 'bottom-nav-item active' : 'bottom-nav-item'}>
+        {bottomNav.map((item) => (
+          <Link href={item.href} key={item.label} className={isActive(pathname, item.href) ? 'bottom-nav-item active' : 'bottom-nav-item'}>
             {item.label}
           </Link>
         ))}
