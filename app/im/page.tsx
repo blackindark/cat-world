@@ -2,8 +2,12 @@ import { AppShell } from '@/components/layout/AppShell';
 import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { IMPlayground } from '@/components/language/IMPlayground';
+import { IMCommunityWorkbench } from '@/components/language/IMCommunityWorkbench';
+import { getImOverview } from '@/lib/im/service';
 
-export default function IMPage() {
+export default async function IMPage() {
+  const overview = await getImOverview();
+
   return (
     <AppShell>
       <PageScene>
@@ -20,6 +24,10 @@ export default function IMPage() {
 
           <SectionCard title="交流中心" description="现在底部已经多了一个 IM tab，对应的就是这个独立页面。">
             <IMPlayground />
+          </SectionCard>
+
+          <SectionCard title="社交管理台" description="开始把好友、群聊和消息数据往 D1-backed 结构推进。">
+            <IMCommunityWorkbench overview={overview} />
           </SectionCard>
         </div>
       </PageScene>

@@ -1693,6 +1693,60 @@ button, input, select, textarea { font: inherit; }
   gap: 10px;
 }
 
+.community-grid,
+.friend-grid,
+.member-pick-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(23,50,31,0.06);
+}
+
+.friend-avatar {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(88,204,2,0.12);
+  font-size: 20px;
+}
+
+.member-pick-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.member-pill {
+  appearance: none;
+  border: 0;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: rgba(23,50,31,0.05);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.member-pill.active {
+  background: rgba(88,204,2,0.16);
+  color: #2e7d00;
+}
+
 @media (min-width: 768px) {
   .app-shell {
     padding: 28px 24px 40px;
@@ -1731,7 +1785,9 @@ button, input, select, textarea { font: inherit; }
   .hub-grid,
   .profile-grid,
   .im-shell,
-  .coach-conversation-shell {
+  .coach-conversation-shell,
+  .community-grid,
+  .friend-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
