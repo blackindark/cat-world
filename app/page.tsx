@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { KpiCard } from '@/components/supply-chain/KpiCard';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { AppShell } from '@/components/layout/AppShell';
+import { InteractiveShowcase } from '@/components/language/InteractiveShowcase';
 
 const focusTracks = [
   {
@@ -84,43 +85,62 @@ const features = [
   '视觉上保留明亮、轻快、有奖励感的学习氛围',
 ];
 
+const delightMoments = [
+  '实时音高轨迹和节奏条，让跟读像打节奏游戏',
+  '手势式卡片切换和即时回弹反馈，减少“填表式学习”感',
+  '更有层次的光效、悬浮、波形动画，让首页本身就有可玩性',
+  '把路径页、lesson 页和首页互动逻辑统一成连续体验',
+];
+
 export default function Page() {
   return (
     <AppShell>
       <div className="page-stack">
-        <section className="hero-card">
+        <section className="hero-card hero-premium">
           <div className="hero-copy">
-            <p className="eyebrow">Mobile-first language learning</p>
-            <h1>把这个项目重构成一款像多邻国一样的语言学习网站，先打磨英语和日语。</h1>
+            <p className="eyebrow">Playful language learning</p>
+            <h1>每天打开一下，就想顺手再学一关。</h1>
             <p className="hero-text">
-              目标不是做一个“课程列表页面”，而是做一个让人愿意每天打开、每天闯关、每天积累反馈的语言学习产品。先聚焦英语和日语，把学习路径、连续打卡、微课节奏和奖励反馈都做出来。
+              英语和日语先做成两条真正有节奏感的学习主线：更快进入状态、更强即时反馈、更顺滑的手机端交互，让学习体验不再像翻目录，而像在闯关。
             </p>
             <div className="hero-actions">
               <Link href="/learn/english" className="primary-cta">开始今天的课程</Link>
-              <a href="#roadmap" className="secondary-cta">查看学习路径</a>
+              <Link href="/lesson/japanese/restaurant-basics" className="secondary-cta">试玩一个日语关卡</Link>
+            </div>
+            <div className="hero-chip-row">
+              <span className="soft-chip">Realtime feedback</span>
+              <span className="soft-chip">Motion UI</span>
+              <span className="soft-chip">Game-like flow</span>
             </div>
           </div>
 
           <div className="phone-stage" aria-label="app preview">
-            <div className="phone-shell">
+            <div className="phone-shell premium-phone-shell">
+              <div className="orb orb-green" />
+              <div className="orb orb-blue" />
               <div className="phone-top">
                 <span>12 day streak</span>
-                <span>❤️ 5</span>
+                <span>⚡ 180 XP</span>
               </div>
-              <div className="phone-progress">
+              <div className="phone-progress premium-panel">
                 <div className="phone-progress-bar"><span style={{ width: '72%' }} /></div>
                 <strong>English unit 4 · ordering food</strong>
                 <p>1 lesson left to keep your streak alive.</p>
               </div>
-              <div className="lesson-bubble success">
+              <div className="lesson-bubble success floating-card">
                 <span className="lesson-label">Speak</span>
                 <strong>“Can I get an oat latte?”</strong>
                 <p>发音评分 91，继续下一句。</p>
               </div>
-              <div className="lesson-bubble info">
+              <div className="lesson-bubble info floating-card delay-card">
                 <span className="lesson-label">日本語</span>
                 <strong>きょうは どこへ いきますか。</strong>
                 <p>句型练习 + 假名提示 + 跟读回放。</p>
+              </div>
+              <div className="wave-bars compact-wave" aria-hidden="true">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <span key={index} style={{ animationDelay: `${index * 120}ms` }} />
+                ))}
               </div>
               <div className="phone-nav">
                 <span className="active">Learn</span>
@@ -139,7 +159,19 @@ export default function Page() {
           <KpiCard label="日语主线" value="16 节" hint="假名、基础句型、JLPT 高频词先打底" />
         </section>
 
-        <SectionCard title="为什么这个方向更对" description="现在的产品应该从“架构展示台”转成“学习行为驱动的语言产品”。">
+        <InteractiveShowcase />
+
+        <SectionCard title="这次重点提升的是体验密度" description="不是只换皮，而是把首页本身做得更有响应感、更愿意点。">
+          <div className="value-grid">
+            {delightMoments.map((feature) => (
+              <article key={feature} className="value-card emphasis-card">
+                <strong>{feature}</strong>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title="产品骨架" description="保留清晰学习结构，但表达方式更像游戏化产品。">
           <div className="value-grid">
             {features.map((feature) => (
               <article key={feature} className="value-card">
