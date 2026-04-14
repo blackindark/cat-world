@@ -1,4 +1,4 @@
-const roadmap = ['供应链', '采购结算', '制造执行', '质量追溯', '主数据治理'];
+const roadmap = ['前台商城', '商品中心', '交易中心', '营销中心', '会员 CRM', '履约售后'];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -8,13 +8,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p className="eyebrow">APPLE-LIKE ERP WORKBENCH</p>
           <h1>Northstar ERP</h1>
           <p className="muted">
-            现在不再只是看板页面，而是一个带真实 D1 数据层的供应链业务工作台。风格切到更接近 mac / Apple 的浅色、玻璃、留白系统。
+            现在已经重构为电商架构学习工作台：前台商城、中后台、营销、订单、履约、售后与数据架构都放在同一个 Next.js + D1 项目里。
           </p>
         </div>
 
         <nav className="nav">
-          <a href="#supply-chain" className="nav-link active">供应链系统</a>
-          <a href="#operations" className="nav-link">业务操作台</a>
+          <a href="#supply-chain" className="nav-link active">电商平台工作台</a>
+          <a href="#operations" className="nav-link">后台操作台</a>
         </nav>
 
         <div className="roadmap-card">
@@ -31,7 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="topbar">
           <div>
             <p className="eyebrow">Single project / Cloudflare-ready / D1-backed</p>
-            <h2>供应链控制塔</h2>
+            <h2>电商平台架构工作台</h2>
           </div>
           <div className="status-pill">Apple-inspired ERP</div>
         </header>
