@@ -1514,6 +1514,139 @@ button, input, select, textarea { font: inherit; }
   gap: 8px;
 }
 
+.review-playground,
+.coach-conversation-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.review-flashcard {
+  appearance: none;
+  width: 100%;
+  min-height: 260px;
+  padding: 22px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 28px;
+  text-align: left;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,240,255,0.92));
+  border: 1px solid rgba(23,50,31,0.06);
+  box-shadow: 0 18px 30px rgba(23,50,31,0.07);
+}
+
+.review-card-face {
+  display: grid;
+  gap: 14px;
+}
+
+.review-card-face strong {
+  font-size: 34px;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.review-metrics-row,
+.review-actions-row,
+.coach-toolbar,
+.im-thread-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coach-scenario-list,
+.coach-reply-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.coach-scenario-button,
+.coach-reply {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(23,50,31,0.06);
+  font: inherit;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.coach-scenario-button.active,
+.coach-reply.active {
+  transform: translateY(-1px);
+  border-color: rgba(88,204,2,0.25);
+  box-shadow: 0 12px 20px rgba(88,204,2,0.08);
+}
+
+.coach-chat-shell {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(23,50,31,0.06);
+}
+
+.coach-message {
+  width: min(100%, 88%);
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(245,240,255,0.92);
+  border: 1px solid rgba(23,50,31,0.06);
+}
+
+.coach-message p {
+  margin: 6px 0 0;
+}
+
+.coach-user {
+  margin-left: auto;
+  background: rgba(232,255,226,0.92);
+}
+
+.coach-avatar {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(88,204,2,0.14);
+  color: #2e7d00;
+  flex: 0 0 auto;
+}
+
+.coach-avatar.sparkle {
+  background: rgba(28,176,246,0.16);
+  color: #0c7ab1;
+}
+
+.im-presence {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.im-compose-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
 @media (min-width: 768px) {
   .app-shell {
     padding: 28px 24px 40px;
@@ -1551,7 +1684,8 @@ button, input, select, textarea { font: inherit; }
   .playful-lesson-grid,
   .hub-grid,
   .profile-grid,
-  .im-shell {
+  .im-shell,
+  .coach-conversation-shell {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

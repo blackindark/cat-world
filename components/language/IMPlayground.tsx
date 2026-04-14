@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircleMore, Send, Sparkles, Users } from 'lucide-react';
+import { MessageCircleMore, Mic2, Send, Sparkles, Users } from 'lucide-react';
 
 type ChatMode = 'direct' | 'group';
 
@@ -18,15 +18,17 @@ type Thread = {
   title: string;
   subtitle: string;
   badge: string;
+  online: string;
   messages: Message[];
 };
 
-const directThreads: Thread[] = [
+const initialDirectThreads: Thread[] = [
   {
     id: 'dm-1',
     title: 'Mika · English buddy',
     subtitle: '刚刚催你去完成口语 streak',
     badge: '1v1',
+    online: 'online',
     messages: [
       { id: 'd1', sender: 'Mika', text: '今晚要不要一起练点餐英语？' },
       { id: 'd2', sender: 'You', text: '可以，我想顺便练一下更自然的语气。', mine: true },
@@ -38,6 +40,7 @@ const directThreads: Thread[] = [
     title: 'Ren · 日本語 teammate',
     subtitle: '分享了一个旅行问路句型',
     badge: '1v1',
+    online: 'typing…',
     messages: [
       { id: 'd4', sender: 'Ren', text: '駅は どこですか 这句我今天终于顺口了。' },
       { id: 'd5', sender: 'You', text: '我还在跟语调打架。', mine: true },
@@ -45,12 +48,13 @@ const directThreads: Thread[] = [
   },
 ];
 
-const groupThreads: Thread[] = [
+const initialGroupThreads: Thread[] = [
   {
     id: 'grp-1',
     title: 'English Night Owls',
     subtitle: '7 人在线 · 深夜口语群',
     badge: 'Group',
+    online: '7 online',
     messages: [
       { id: 'g1', sender: 'Nora', text: '来个 30 秒自我介绍 challenge？' },
       { id: 'g2', sender: 'Bo', text: '输的人发今天最尴尬的中式英语。' },
@@ -62,6 +66,7 @@ const groupThreads: Thread[] = [
     title: '東京迷路互助会',
     subtitle: '12 人在线 · 日语旅行群',
     badge: 'Group',
+    online: '12 online',
     messages: [
       { id: 'g4', sender: 'Yuki', text: '今天主题：怎么问地铁换乘最自然。' },
       { id: 'g5', sender: 'Sena', text: '我先来一句，大家帮我挑毛病。' },
@@ -78,6 +83,8 @@ const quickReplies = [
 
 export function IMPlayground() {
   const [mode, setMode] = useState<ChatMode>('direct');
+  const [directThreads, setDirectThreads] = useState(initialDirectThreads);
+  const [groupThreads, setGroupThreads] = useState(initialGroupThreads);
   const [selectedId, setSelectedId] = useState('dm-1');
   const [draft, setDraft] = useState('');
 
@@ -89,7 +96,47 @@ export function IMPlayground() {
 
   function switchMode(nextMode: ChatMode) {
     setMode(nextMode);
-    setSelectedId(nextMode === 'direct' ? directThreads[0].id : groupThreads[0].id);
+    setSelectedId(nextMode === 'direct' ? initialDirectThreads[0].id : initialGroupThreads[0].id);
+    setDraft('');
+  }
+
+  function sendMessage() {
+    const text = draft.trim();
+    if (!text) return;
+
+    const nextMessage = {
+      id: `${selectedId}-${Date.now()}`,
+      sender: 'You',
+      text,
+      mine: true,
+    };
+
+    if (mode === 'direct') {
+      setDirectThreads((current) =>
+        current.map((thread) =>
+          thread.id === selectedId
+            ? {
+                ...thread,
+                subtitle: '刚刚收到一条新消息',
+                messages: [...thread.messages, nextMessage],
+              }
+            : thread,
+        ),
+      );
+    } else {
+      setGroupThreads((current) =>
+        current.map((thread) =>
+          thread.id === selectedId
+            ? {
+                ...thread,
+                subtitle: '刚刚收到一条新消息',
+                messages: [...thread.messages, nextMessage],
+              }
+            : thread,
+        ),
+      );
+    }
+
     setDraft('');
   }
 
@@ -113,7 +160,10 @@ export function IMPlayground() {
               className={thread.id === selectedThread.id ? 'im-thread active' : 'im-thread'}
               onClick={() => setSelectedId(thread.id)}
             >
-              <span className="soft-chip">{thread.badge}</span>
+              <div className="im-thread-topline">
+                <span className="soft-chip">{thread.badge}</span>
+                <span className="im-presence">{thread.online}</span>
+              </div>
               <strong>{thread.title}</strong>
               <p className="muted">{thread.subtitle}</p>
             </button>
@@ -162,6 +212,11 @@ export function IMPlayground() {
           ))}
         </div>
 
+        <div className="im-compose-toolbar">
+          <span className="soft-chip">练习房可直接拉好友</span>
+          <button type="button" className="secondary-cta review-action-button"><Mic2 size={16} /> 语音草稿</button>
+        </div>
+
         <div className="im-compose">
           <textarea
             value={draft}
@@ -169,7 +224,7 @@ export function IMPlayground() {
             placeholder={mode === 'direct' ? '发一句更自然的表达给好友…' : '在群里发起一轮挑战…'}
             rows={3}
           />
-          <button type="button" className="primary-button fun-button im-send-button">
+          <button type="button" className="primary-button fun-button im-send-button" onClick={sendMessage}>
             <Send size={16} /> 发送
           </button>
         </div>

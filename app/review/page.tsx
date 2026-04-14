@@ -2,6 +2,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { ReviewDeck } from '@/components/language/MotionDeck';
+import { ReviewPlayground } from '@/components/language/ReviewPlayground';
 
 const reviewItems = [
   { term: 'Can I get an oat latte?', gloss: '更自然的点单表达，适合口语热身。', badge: 'English' },
@@ -19,9 +20,13 @@ export default function ReviewPage() {
             <div className="hero-copy">
               <p className="eyebrow">Review hub</p>
               <h1>Review 要像刷奖励，不该像补作业。</h1>
-              <p className="hero-text">这里先做成独立复习页。后面可以继续接入真正的间隔重复、难度回流和错题优先级。</p>
+              <p className="hero-text">这里不再只是看静态词条，而是先做成更像翻卡、判断、推进节奏的复习体验。</p>
             </div>
           </section>
+
+          <SectionCard title="翻卡复习" description="先用轻量但可玩的方式把复习体验做起来。">
+            <ReviewPlayground />
+          </SectionCard>
 
           <SectionCard title="今日复习堆栈" description="先把最容易忘、最值得复习的内容推到你面前。">
             <ReviewDeck items={reviewItems} />

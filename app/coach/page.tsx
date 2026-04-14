@@ -2,6 +2,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { CoachDeck } from '@/components/language/MotionDeck';
+import { CoachConversation } from '@/components/language/CoachConversation';
 
 const prompts = [
   {
@@ -29,12 +30,16 @@ export default function CoachPage() {
           <section className="hero-card hub-hero coach-hero">
             <div className="hero-copy">
               <p className="eyebrow">Coach hub</p>
-              <h1>Coach 现在也有自己的页面，不再挤在长页面里。</h1>
-              <p className="hero-text">这一页专门承接陪练、纠错和场景模拟。后面继续接语音、打分和更强的 AI 教练逻辑。</p>
+              <h1>Coach 不该只是按钮列表，而该像真有人在带你说。</h1>
+              <p className="hero-text">我把它往对话式陪练推进了一步：场景切换、建议回复、即时反馈都开始像真正的 coach 界面。</p>
             </div>
           </section>
 
-          <SectionCard title="陪练入口" description="先把最能让用户感到被陪伴的入口放到一起。">
+          <SectionCard title="对话式陪练" description="先做成更像真实教练对话的界面，而不是一排功能入口。">
+            <CoachConversation />
+          </SectionCard>
+
+          <SectionCard title="陪练入口" description="保留不同陪练模式的入口，继续往深处拓展。">
             <CoachDeck prompts={prompts} />
           </SectionCard>
         </div>
