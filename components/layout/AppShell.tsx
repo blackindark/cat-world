@@ -5,15 +5,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="shell">
       <aside className="sidebar">
         <div>
-          <p className="eyebrow">ERP ARCHITECTURE</p>
+          <p className="eyebrow">APPLE-LIKE ERP WORKBENCH</p>
           <h1>Northstar ERP</h1>
           <p className="muted">
-            Next.js 全栈单项目 + 内存行数据库原型。页面、API、供应链领域模型统一收敛在一个仓库里，方便直接部署到 Cloudflare。
+            现在不再只是看板页面，而是一个带真实 D1 数据层的供应链业务工作台。风格切到更接近 mac / Apple 的浅色、玻璃、留白系统。
           </p>
         </div>
 
         <nav className="nav">
           <a href="#supply-chain" className="nav-link active">供应链系统</a>
+          <a href="#operations" className="nav-link">业务操作台</a>
         </nav>
 
         <div className="roadmap-card">
@@ -29,10 +30,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="content" id="supply-chain">
         <header className="topbar">
           <div>
-            <p className="eyebrow">Single project / Cloudflare-ready</p>
+            <p className="eyebrow">Single project / Cloudflare-ready / D1-backed</p>
             <h2>供应链控制塔</h2>
           </div>
-          <div className="status-pill">Next.js full-stack</div>
+          <div className="status-pill">Apple-inspired ERP</div>
         </header>
         {children}
       </main>

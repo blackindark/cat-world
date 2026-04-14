@@ -4,10 +4,10 @@
 
 - Next.js App Router
 - 页面与 API 共用同一套供应链领域模型
-- 内存行数据库式数据层
-- 面向 Cloudflare 的单项目部署
+- 供应链领域模型
+- Cloudflare 部署 via OpenNext
 - 当前优先域：供应链系统
-- 设计规范：根目录 `DESIGN.md`
+- 设计规范：根目录 `DESIGN.md`（当前切换为 Apple / mac 风格）
 
 ## 当前结构
 

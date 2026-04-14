@@ -47,6 +47,7 @@ export interface PurchaseOrder {
 export interface Receipt {
   id: string;
   purchaseOrderId: string;
+  inventoryItemId?: string;
   warehouseId: string;
   receivedAt: string;
   quantity: number;
@@ -87,4 +88,32 @@ export interface SupplyChainOverview {
   alerts: SupplyChainAlert[];
   topSuppliers: Supplier[];
   inventoryRisks: InventoryItem[];
+}
+
+export interface CreateSupplierInput {
+  name: string;
+  category: string;
+  leadTimeDays: number;
+  onTimeRate: number;
+  status: SupplierStatus;
+  region: string;
+}
+
+export interface CreatePurchaseOrderInput {
+  supplierId: string;
+  warehouseId: string;
+  amountCny: number;
+  status: PurchaseOrderStatus;
+  eta: string;
+  buyer: string;
+}
+
+export interface CreateReceiptInput {
+  purchaseOrderId: string;
+  inventoryItemId: string;
+  warehouseId: string;
+  quantity: number;
+  qualityPassRate: number;
+  receivedAt?: string;
+  markOrderReceived?: boolean;
 }

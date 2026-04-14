@@ -23,6 +23,12 @@ export async function getD1Database(): Promise<D1DatabaseLike | undefined> {
   }
 }
 
+export async function requireD1Database(): Promise<D1DatabaseLike> {
+  const db = await getD1Database();
+  if (!db) throw new Error('Cloudflare D1 binding DB is not available in the current runtime.');
+  return db;
+}
+
 export async function queryAll<T>(db: D1DatabaseLike, sql: string, ...params: unknown[]): Promise<T[]> {
   const statement = db.prepare(sql).bind(...params);
   const result = await statement.all<T>();
@@ -31,4 +37,8 @@ export async function queryAll<T>(db: D1DatabaseLike, sql: string, ...params: un
 
 export async function queryFirst<T>(db: D1DatabaseLike, sql: string, ...params: unknown[]): Promise<T | null> {
   return db.prepare(sql).bind(...params).first<T>();
+}
+
+export async function executeRun(db: D1DatabaseLike, sql: string, ...params: unknown[]) {
+  return db.prepare(sql).bind(...params).run();
 }

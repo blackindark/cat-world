@@ -1,5 +1,6 @@
 import { KpiCard } from '@/components/supply-chain/KpiCard';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
+import { SupplyChainWorkbench } from '@/components/supply-chain/SupplyChainWorkbench';
 import { AppShell } from '@/components/layout/AppShell';
 import {
   getInventory,
@@ -33,19 +34,19 @@ export default async function Page() {
   return (
     <AppShell>
       <div className="page-grid">
-        <section className="hero panel">
+        <section className="hero panel hero-light">
           <div>
-            <p className="eyebrow">Next.js full-stack ERP</p>
-            <h3>把采购、仓储、库存、收货和异常处理收束到一个可演示的 ERP 原型里。</h3>
+            <p className="eyebrow">Supply chain ERP</p>
+            <h3>从好看的页面，推进到真正能录入供应商、下采购单、确认收货入库的业务工作台。</h3>
             <p className="muted">
-              当前已经接入 Cloudflare D1 持久化。页面、API、供应链领域模型和数据库绑定都在同一个 Next.js 工程里。
+              当前系统已经切换到更接近 mac / Apple 的轻量设计语言，同时把三类业务动作接进了 D1：供应商主数据、采购单创建、到货入库。
             </p>
           </div>
           <div className="hero-badges">
-            <span>采购协同</span>
-            <span>库存风险</span>
-            <span>仓储利用率</span>
-            <span>到货质检</span>
+            <span>Supplier master</span>
+            <span>Purchase orders</span>
+            <span>Goods receipt</span>
+            <span>D1 persistence</span>
           </div>
         </section>
 
@@ -56,6 +57,16 @@ export default async function Page() {
           <KpiCard label="仓储平均利用率" value={`${overview.kpis.warehouseUtilization}%`} hint="监控扩容与调拨压力" />
           <KpiCard label="今日入库件数" value={String(overview.kpis.inboundToday)} hint="连接收货与质检" />
           <KpiCard label="异常告警" value={String(overview.kpis.alertCount)} hint="按严重等级升级处理" />
+        </section>
+
+        <section id="operations" className="panel spotlight-panel">
+          <div className="section-header">
+            <div>
+              <h3>业务操作台</h3>
+              <p className="muted">下面这三块已经不只是前端展示，而是实际写 D1 的业务动作。</p>
+            </div>
+          </div>
+          <SupplyChainWorkbench suppliers={suppliers} warehouses={warehouses} inventory={inventory} purchaseOrders={purchaseOrders} />
         </section>
 
         <div className="two-column-grid">
@@ -71,7 +82,7 @@ export default async function Page() {
             </div>
           </SectionCard>
 
-          <SectionCard title="异常中心" description="先把供应链最痛的地方暴露出来。">
+          <SectionCard title="异常中心" description="收货质检偏低时也会自动形成预警。">
             <div className="alert-list">
               {overview.alerts.map((alert) => (
                 <article key={alert.id} className={`alert-item ${alert.severity}`}>
@@ -87,7 +98,7 @@ export default async function Page() {
         </div>
 
         <div className="two-column-grid">
-          <SectionCard title="供应商矩阵" description="优先保证交付稳定性与战略供应安全。">
+          <SectionCard title="供应商矩阵" description="新增供应商后这里会立刻刷新。">
             <table className="data-table">
               <thead><tr><th>供应商</th><th>类别</th><th>区域</th><th>交期</th><th>准时率</th><th>状态</th></tr></thead>
               <tbody>
@@ -100,7 +111,7 @@ export default async function Page() {
             </table>
           </SectionCard>
 
-          <SectionCard title="库存风险清单" description="用最少字段，先打出库存控制感。">
+          <SectionCard title="库存风险清单" description="到货入库后这里的数据也会同步变化。">
             <div className="stack-list">
               {overview.inventoryRisks.map((item) => (
                 <article key={item.id} className="stack-item">
@@ -113,7 +124,7 @@ export default async function Page() {
         </div>
 
         <div className="two-column-grid wide-left">
-          <SectionCard title="采购订单" description="供应链系统第一批关键交易单据。">
+          <SectionCard title="采购订单" description="新建采购单后按创建时间倒序展示。">
             <table className="data-table">
               <thead><tr><th>PO</th><th>采购员</th><th>状态</th><th>ETA</th><th>金额</th></tr></thead>
               <tbody>
@@ -137,7 +148,7 @@ export default async function Page() {
                 ))}
               </div>
             </SectionCard>
-            <SectionCard title="到货与质检" description="把收货环节做成可视化闭环。">
+            <SectionCard title="到货与质检" description="确认收货后会直接推进库存与告警。">
               <div className="stack-list compact">
                 {receipts.map((receipt) => (
                   <article key={receipt.id} className="stack-item">
@@ -150,7 +161,7 @@ export default async function Page() {
           </div>
         </div>
 
-        <SectionCard title="库存台账快照" description="现在这个页面优先从 D1 读取数据，本地无 D1 绑定时退回种子数据。">
+        <SectionCard title="库存台账快照" description="现在页面真正读取 D1，并随着收货入库实时更新。">
           <table className="data-table">
             <thead><tr><th>SKU</th><th>品名</th><th>分类</th><th>现存</th><th>安全库存</th><th>周转天数</th></tr></thead>
             <tbody>
@@ -159,15 +170,6 @@ export default async function Page() {
               ))}
             </tbody>
           </table>
-        </SectionCard>
-
-        <SectionCard title="ERP 后续扩展" description="供应链打底后，后面的模块就顺了。">
-          <div className="roadmap-grid">
-            <article className="roadmap-item"><strong>采购结算</strong><p className="muted">把 PO、收货、发票、应付三单匹配串起来。</p></article>
-            <article className="roadmap-item"><strong>制造执行</strong><p className="muted">工单、BOM、齐套校验、产线节拍与异常停机。</p></article>
-            <article className="roadmap-item"><strong>质量追溯</strong><p className="muted">来料检验、批次、缺陷闭环与召回链路。</p></article>
-            <article className="roadmap-item"><strong>主数据治理</strong><p className="muted">物料、供应商、仓位、组织、计量单位统一治理。</p></article>
-          </div>
         </SectionCard>
       </div>
     </AppShell>
