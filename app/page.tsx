@@ -1,257 +1,269 @@
+import Link from 'next/link';
 import { KpiCard } from '@/components/supply-chain/KpiCard';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { AppShell } from '@/components/layout/AppShell';
-import { EcommerceWorkbench } from '@/components/ecommerce/EcommerceWorkbench';
-import {
-  getAfterSalesTickets,
-  getCampaigns,
-  getCartItems,
-  getCategories,
-  getCustomers,
-  getEcommerceOverview,
-  getPaymentRecords,
-  getProducts,
-  getSalesOrders,
-  getShipmentRecords,
-} from '@/lib/ecommerce/service';
 
-export const dynamic = 'force-dynamic';
+const focusTracks = [
+  {
+    slug: 'english',
+    name: 'English Sprint',
+    level: 'A1 → B2',
+    badge: 'Core track',
+    description: '围绕高频口语、职场表达、听力跟读和语法纠错，做一条适合中国学习者的英语主线。',
+    modules: ['Daily speaking', 'Listening shadowing', 'Grammar repair', 'Scenario drills'],
+    progress: 72,
+    accent: 'emerald',
+  },
+  {
+    slug: 'japanese',
+    name: 'Japanese Quest',
+    level: 'N5 → N3',
+    badge: 'Launch track',
+    description: '从假名、基础句型、旅行会话到 JLPT 高频词汇，先把日语入门和持续练习做扎实。',
+    modules: ['Kana warmup', 'Travel phrases', 'JLPT vocab', 'Sentence patterns'],
+    progress: 48,
+    accent: 'sky',
+  },
+];
 
-function formatCurrency(valueCents: number) {
-  return new Intl.NumberFormat('zh-CN', {
-    style: 'currency',
-    currency: 'CNY',
-    maximumFractionDigits: 0,
-  }).format(valueCents / 100);
-}
+const dailyMissions = [
+  {
+    title: '3-minute speaking burst',
+    detail: '看图开口 + AI 跟读反馈，今天主题是 cafe ordering。',
+    chip: 'English',
+  },
+  {
+    title: 'Kana speed review',
+    detail: '用滑动卡片复习 20 个平假名，错题自动回炉。',
+    chip: 'Japanese',
+  },
+  {
+    title: 'Streak saver lesson',
+    detail: '晚上只剩 1 节微课就能保住连续学习 12 天。',
+    chip: 'Habit',
+  },
+];
 
-export default async function Page() {
-  const [overview, categories, products, customers, orders, campaigns, afterSales, cartItems, payments, shipments] = await Promise.all([
-    getEcommerceOverview(),
-    getCategories(),
-    getProducts(),
-    getCustomers(),
-    getSalesOrders(),
-    getCampaigns(),
-    getAfterSalesTickets(),
-    getCartItems(),
-    getPaymentRecords(),
-    getShipmentRecords(),
-  ]);
+const lessonMoments = [
+  {
+    title: '听说读写一体化小关卡',
+    text: '每节课控制在 3-7 分钟：先听懂，再开口，再做选择题，最后写一句自己的表达。',
+  },
+  {
+    title: '错误驱动复习',
+    text: '不是机械背题，而是把你的发音错误、词汇遗忘和语法漏洞单独做成复习流。',
+  },
+  {
+    title: '通勤场景优先',
+    text: '手机端单手就能完成，地铁、排队、碎片时间都能学，不需要桌面端才能打开。',
+  },
+];
 
+const roadmap = [
+  {
+    phase: 'Phase 01',
+    title: '英语 / 日语双主线',
+    items: ['每日闯关首页', '词汇卡片', '跟读打分', '连续学习奖励'],
+  },
+  {
+    phase: 'Phase 02',
+    title: 'AI 陪练与纠错',
+    items: ['口语对话教练', '作文即时批改', '错题重训', '个性化难度调节'],
+  },
+  {
+    phase: 'Phase 03',
+    title: '学习闭环与社交激励',
+    items: ['好友排行榜', '学习队伍', '打卡分享卡片', '课程成长档案'],
+  },
+];
+
+const features = [
+  '课程路径像游戏地图一样推进',
+  '英语和日语都先做高频真实场景',
+  '移动端底部导航 + 大按钮 + 手势友好',
+  '视觉上保留明亮、轻快、有奖励感的学习氛围',
+];
+
+export default function Page() {
   return (
     <AppShell>
-      <div className="page-grid">
-        <section className="hero panel hero-light">
-          <div>
-            <p className="eyebrow">Professional ecommerce architecture workbench</p>
-            <h3>把前台商城、交易履约、中后台运营、数据架构和技术架构都拉进同一个可学习、可演示、可落库的电商平台工作台。</h3>
-            <p className="muted">
-              当前版本已经把业务重心切换为电商系统，并开始接入真实 D1 业务动作：商品中心、顾客档案、购物车、结算、订单流转、支付、物流、售后。这个仓库已经不只是看概念，而是可以用来学习专业电商平台领域模型。
+      <div className="page-stack">
+        <section className="hero-card">
+          <div className="hero-copy">
+            <p className="eyebrow">Mobile-first language learning</p>
+            <h1>把这个项目重构成一款像多邻国一样的语言学习网站，先打磨英语和日语。</h1>
+            <p className="hero-text">
+              目标不是做一个“课程列表页面”，而是做一个让人愿意每天打开、每天闯关、每天积累反馈的语言学习产品。先聚焦英语和日语，把学习路径、连续打卡、微课节奏和奖励反馈都做出来。
             </p>
+            <div className="hero-actions">
+              <Link href="/learn/english" className="primary-cta">开始今天的课程</Link>
+              <a href="#roadmap" className="secondary-cta">查看学习路径</a>
+            </div>
           </div>
-          <div className="hero-badges">
-            <span>Storefront</span>
-            <span>Admin</span>
-            <span>Order lifecycle</span>
-            <span>After-sales</span>
-            <span>Payment</span>
-            <span>Data architecture</span>
+
+          <div className="phone-stage" aria-label="app preview">
+            <div className="phone-shell">
+              <div className="phone-top">
+                <span>12 day streak</span>
+                <span>❤️ 5</span>
+              </div>
+              <div className="phone-progress">
+                <div className="phone-progress-bar"><span style={{ width: '72%' }} /></div>
+                <strong>English unit 4 · ordering food</strong>
+                <p>1 lesson left to keep your streak alive.</p>
+              </div>
+              <div className="lesson-bubble success">
+                <span className="lesson-label">Speak</span>
+                <strong>“Can I get an oat latte?”</strong>
+                <p>发音评分 91，继续下一句。</p>
+              </div>
+              <div className="lesson-bubble info">
+                <span className="lesson-label">日本語</span>
+                <strong>きょうは どこへ いきますか。</strong>
+                <p>句型练习 + 假名提示 + 跟读回放。</p>
+              </div>
+              <div className="phone-nav">
+                <span className="active">Learn</span>
+                <span>Review</span>
+                <span>Coach</span>
+                <span>Profile</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="kpi-grid">
-          <KpiCard label="已上架商品" value={String(overview.kpis.activeProducts)} hint="商品中心 / 类目 / 价格 / 库存" />
-          <KpiCard label="付费顾客" value={String(overview.kpis.payingCustomers)} hint="会员中心 / 生命周期运营" />
-          <KpiCard label="GMV" value={formatCurrency(overview.kpis.grossMerchandiseValueCents)} hint="交易中心核心经营指标" />
-          <KpiCard label="待推进订单" value={String(overview.kpis.pendingOrders)} hint="支付、履约、售后协同" />
-          <KpiCard label="进行中营销活动" value={String(overview.kpis.runningCampaigns)} hint="促销 / 券包 / 预售 / 会场" />
-          <KpiCard label="开放售后工单" value={String(overview.kpis.afterSalesOpenTickets)} hint="退款 / 退货 / 换货 / 投诉" />
+        <section className="kpi-grid language-kpis">
+          <KpiCard label="连续学习" value="12 天" hint="低负担、强反馈、让用户更容易坚持" />
+          <KpiCard label="今日 XP" value="180" hint="微课完成、复习加成、口语奖励" />
+          <KpiCard label="英语主线" value="24 节" hint="从高频口语到场景会话逐级推进" />
+          <KpiCard label="日语主线" value="16 节" hint="假名、基础句型、JLPT 高频词先打底" />
         </section>
 
-        <div className="two-column-grid wide-left">
-          <SectionCard title="电商业务点总览" description="前台 + 中后台 + 架构学习点，尽量按专业平台来拆。">
-            <div className="roadmap-grid dense-grid">
-              <article className="roadmap-item"><strong>前台商城</strong><p className="muted">首页、频道、搜索、推荐、商品详情、购物车、结算、支付、订单查询。</p></article>
-              <article className="roadmap-item"><strong>商品中心</strong><p className="muted">类目、品牌、属性、SPU/SKU、上下架、价格、库存、组合售卖。</p></article>
-              <article className="roadmap-item"><strong>交易中心</strong><p className="muted">下单、支付、拆单、风控、发票、对账、取消、退款、逆向单。</p></article>
-              <article className="roadmap-item"><strong>营销中心</strong><p className="muted">优惠券、满减、秒杀、预售、会员价、直播会场、A/B 与投放归因。</p></article>
-              <article className="roadmap-item"><strong>会员 CRM</strong><p className="muted">用户分层、生命周期、积分、权益、标签、人群包与召回。</p></article>
-              <article className="roadmap-item"><strong>履约中心</strong><p className="muted">OMS、WMS、TMS、门店自提、逆向物流、时效与异常协同。</p></article>
-              <article className="roadmap-item"><strong>客服售后</strong><p className="muted">退款、退货、换货、质检、赔付、投诉闭环。</p></article>
-              <article className="roadmap-item"><strong>数据中台</strong><p className="muted">GMV、转化率、复购率、退款率、履约时效、广告 ROI、客群分析。</p></article>
+        <SectionCard title="为什么这个方向更对" description="现在的产品应该从“架构展示台”转成“学习行为驱动的语言产品”。">
+          <div className="value-grid">
+            {features.map((feature) => (
+              <article key={feature} className="value-card">
+                <strong>{feature}</strong>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <div id="tracks" className="track-grid">
+          {focusTracks.map((track) => (
+            <section className={`panel track-card ${track.accent}`} key={track.name}>
+              <div className="track-header-row">
+                <div>
+                  <p className="eyebrow">{track.badge}</p>
+                  <h3>{track.name}</h3>
+                  <p className="muted">{track.level}</p>
+                </div>
+                <span className="track-progress-pill">{track.progress}%</span>
+              </div>
+              <p className="track-description">{track.description}</p>
+              <div className="track-progress-bar">
+                <span style={{ width: `${track.progress}%` }} />
+              </div>
+              <div className="chip-row">
+                {track.modules.map((module) => (
+                  <span key={module} className="soft-chip">{module}</span>
+                ))}
+              </div>
+              <div className="hero-actions lesson-actions-row">
+                <Link href={`/learn/${track.slug}`} className="primary-cta">
+                  进入路径
+                </Link>
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <div className="two-panel-grid">
+          <SectionCard title="今日任务" description="学习体验要像任务流，而不是像传统目录树。">
+            <div className="mission-list">
+              {dailyMissions.map((mission) => (
+                <article key={mission.title} className="mission-card">
+                  <div>
+                    <strong>{mission.title}</strong>
+                    <p className="muted">{mission.detail}</p>
+                  </div>
+                  <span className="mission-chip">{mission.chip}</span>
+                </article>
+              ))}
             </div>
           </SectionCard>
 
-          <SectionCard title="技术架构 / 产品架构学习轨道" description="这个仓库现在不仅是页面，而是一个可以讲架构的方法论工作台。">
-            <div className="stack-list">
-              {overview.architectureTracks.map((track) => (
-                <article className="stack-item vertical" key={track.title}>
-                  <div>
-                    <strong>{track.title}</strong>
-                    <ul className="bullet-list">
-                      {track.points.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                  </div>
+          <SectionCard title="关卡设计" description="先把最容易形成正反馈的学习循环做出来。">
+            <div className="lesson-moment-list">
+              {lessonMoments.map((item) => (
+                <article key={item.title} className="lesson-moment-card">
+                  <strong>{item.title}</strong>
+                  <p className="muted">{item.text}</p>
                 </article>
               ))}
             </div>
           </SectionCard>
         </div>
 
-        <SectionCard title="顾客旅程与平台能力映射" description="把产品视角和系统视角放在一张图里。">
-          <div className="journey-grid">
-            {overview.customerJourney.map((item) => (
-              <article key={item.stage} className="journey-card">
-                <p className="eyebrow">{item.stage}</p>
-                <strong>{item.description}</strong>
-                <p className="muted">关键系统：{item.keySystems.join(' / ')}</p>
+        <SectionCard title="手机端优先的交互骨架" description="这一版视觉和布局优先服务手机使用场景。">
+          <div className="mobile-principles-grid">
+            <article className="principle-card">
+              <strong>底部导航</strong>
+              <p className="muted">学习、复习、AI 教练、个人中心全部落在拇指热区，不依赖桌面侧边栏。</p>
+            </article>
+            <article className="principle-card">
+              <strong>大尺寸操作区</strong>
+              <p className="muted">题目按钮、录音按钮、下一步按钮全部扩大，避免手机端误触。</p>
+            </article>
+            <article className="principle-card">
+              <strong>卡片式微课</strong>
+              <p className="muted">每一屏只讲一件事，减少信息过载，鼓励连续完成多个小任务。</p>
+            </article>
+            <article className="principle-card">
+              <strong>奖励反馈明显</strong>
+              <p className="muted">连胜、经验值、正确率、掌握度都要即时可见，形成多邻国式成就感。</p>
+            </article>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="英语与日语的课程切入点" description="先做最容易验证用户价值的内容，而不是一上来铺太多语言。">
+          <div className="curriculum-grid">
+            <article className="curriculum-card english">
+              <p className="eyebrow">English</p>
+              <h3>先打高频表达和开口信心</h3>
+              <ul>
+                <li>自我介绍、点餐、出行、工作沟通</li>
+                <li>听一句说一句，弱化死记硬背</li>
+                <li>重点做口语纠错和场景复述</li>
+              </ul>
+            </article>
+            <article className="curriculum-card japanese">
+              <p className="eyebrow">Japanese</p>
+              <h3>先打假名、句型和旅行会话</h3>
+              <ul>
+                <li>平假名 / 片假名分层记忆</li>
+                <li>です / ます 句型与常用问答</li>
+                <li>旅行、餐厅、购物场景先上线</li>
+              </ul>
+            </article>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="接下来应该继续迭代什么" description="如果继续往下做，我建议优先按这个节奏推进。">
+          <div id="roadmap" className="roadmap-grid language-roadmap">
+            {roadmap.map((phase) => (
+              <article key={phase.phase} className="roadmap-item language-roadmap-item">
+                <p className="eyebrow">{phase.phase}</p>
+                <strong>{phase.title}</strong>
+                <ul className="bullet-list">
+                  {phase.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </article>
             ))}
           </div>
         </SectionCard>
-
-        <section id="operations" className="panel spotlight-panel">
-          <div className="section-header">
-            <div>
-              <h3>电商业务操作台</h3>
-              <p className="muted">这里开始做真实后台动作：商品、顾客、购物车、结算、订单流转、售后都可以写入 D1。</p>
-            </div>
-          </div>
-          <EcommerceWorkbench categories={categories} products={products} customers={customers} orders={orders} />
-        </section>
-
-        <div className="two-column-grid">
-          <SectionCard title="商品矩阵" description="商品中心是所有电商系统的起点。">
-            <table className="data-table">
-              <thead><tr><th>SKU</th><th>商品</th><th>渠道</th><th>状态</th><th>库存</th><th>销量</th><th>售价</th></tr></thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.skuCode}</td>
-                    <td>{product.name}</td>
-                    <td>{product.channel}</td>
-                    <td><span className={`tag ${product.status}`}>{product.status}</span></td>
-                    <td>{product.stockOnHand}</td>
-                    <td>{product.salesVolume}</td>
-                    <td>{formatCurrency(product.priceCents)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </SectionCard>
-
-          <SectionCard title="顾客分层" description="会员等级、生命周期和累计消费构成 CRM 经营底盘。">
-            <table className="data-table">
-              <thead><tr><th>顾客</th><th>等级</th><th>生命周期</th><th>城市</th><th>累计消费</th></tr></thead>
-              <tbody>
-                {customers.map((customer) => (
-                  <tr key={customer.id}>
-                    <td>{customer.name}</td>
-                    <td><span className={`tag ${customer.tier}`}>{customer.tier}</span></td>
-                    <td>{customer.lifecycleStage}</td>
-                    <td>{customer.city}</td>
-                    <td>{formatCurrency(customer.totalSpentCents)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </SectionCard>
-        </div>
-
-        <div className="two-column-grid wide-left">
-          <SectionCard title="订单中心" description="前台下单后，后台要推进支付、履约和售后。">
-            <table className="data-table">
-              <thead><tr><th>订单号</th><th>渠道</th><th>订单状态</th><th>支付状态</th><th>履约状态</th><th>金额</th></tr></thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.channel}</td>
-                    <td><span className={`tag ${order.status}`}>{order.status}</span></td>
-                    <td>{order.paymentStatus}</td>
-                    <td>{order.fulfillmentStatus}</td>
-                    <td>{formatCurrency(order.orderAmountCents)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </SectionCard>
-
-          <div className="stack-panels">
-            <SectionCard title="营销活动" description="活动不是页面皮肤，而是价格与人群的规则系统。">
-              <div className="stack-list compact">
-                {campaigns.map((campaign) => (
-                  <article key={campaign.id} className="stack-item vertical compact-card">
-                    <strong>{campaign.name}</strong>
-                    <p className="muted">{campaign.type} · {campaign.owner}</p>
-                    <div className="metric-pair left"><span>{campaign.status}</span><span>预算 {formatCurrency(campaign.budgetCents)}</span></div>
-                  </article>
-                ))}
-              </div>
-            </SectionCard>
-
-            <SectionCard title="售后工单" description="退款、换货、投诉是电商平台不可回避的长期战场。">
-              <div className="stack-list compact">
-                {afterSales.map((ticket) => (
-                  <article key={ticket.id} className="stack-item vertical compact-card">
-                    <strong>{ticket.orderId}</strong>
-                    <p className="muted">{ticket.type} · {ticket.status}</p>
-                    <p>{ticket.reason}</p>
-                  </article>
-                ))}
-              </div>
-            </SectionCard>
-          </div>
-        </div>
-
-        <div className="two-column-grid wide-left">
-          <SectionCard title="购物车与结算链路" description="前台从加购到支付前结算，是转化核心路径。">
-            <table className="data-table">
-              <thead><tr><th>购物车项</th><th>顾客</th><th>商品</th><th>渠道</th><th>数量</th></tr></thead>
-              <tbody>
-                {cartItems.map((item) => {
-                  const customer = customers.find((entry) => entry.id === item.customerId);
-                  const product = products.find((entry) => entry.id === item.productId);
-                  return (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
-                      <td>{customer?.name ?? item.customerId}</td>
-                      <td>{product?.name ?? item.productId}</td>
-                      <td>{item.channel}</td>
-                      <td>{item.quantity}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </SectionCard>
-
-          <SectionCard title="支付与物流记录" description="电商平台要能解释支付单、发货单、运单的边界。">
-            <div className="two-column-grid equal-grid inner-grid">
-              <div className="stack-list compact">
-                {payments.map((payment) => (
-                  <article key={payment.id} className="stack-item vertical compact-card">
-                    <strong>{payment.id}</strong>
-                    <p className="muted">{payment.orderId} · {payment.method}</p>
-                    <div className="metric-pair left"><span>{payment.status}</span><span>{formatCurrency(payment.amountCents)}</span></div>
-                  </article>
-                ))}
-              </div>
-              <div className="stack-list compact">
-                {shipments.map((shipment) => (
-                  <article key={shipment.id} className="stack-item vertical compact-card">
-                    <strong>{shipment.orderId}</strong>
-                    <p className="muted">{shipment.carrier} · {shipment.trackingNo}</p>
-                    <div className="metric-pair left"><span>{shipment.status}</span><span>{shipment.warehouseCode}</span></div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </SectionCard>
-        </div>
       </div>
     </AppShell>
   );

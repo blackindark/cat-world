@@ -1,42 +1,46 @@
-const roadmap = ['前台商城', '商品中心', '交易中心', '营销中心', '会员 CRM', '履约售后'];
+import Link from 'next/link';
+
+const primaryNav = [
+  { label: '首页', href: '/' },
+  { label: '英语路径', href: '/learn/english' },
+  { label: '日语路径', href: '/learn/japanese' },
+  { label: 'AI 教练', href: '/lesson/english/small-talk-at-work' },
+];
+
+const bottomNav = [
+  { label: 'Learn', href: '/learn/english' },
+  { label: 'Review', href: '/learn/japanese' },
+  { label: 'Coach', href: '/lesson/english/small-talk-at-work' },
+  { label: 'Me', href: '/' },
+];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="shell">
-      <aside className="sidebar">
-        <div>
-          <p className="eyebrow">APPLE-LIKE ERP WORKBENCH</p>
-          <h1>Northstar ERP</h1>
-          <p className="muted">
-            现在已经重构为电商架构学习工作台：前台商城、中后台、营销、订单、履约、售后与数据架构都放在同一个 Next.js + D1 项目里。
-          </p>
+    <div className="app-shell">
+      <header className="site-header">
+        <div className="brand-block">
+          <p className="eyebrow">Northstar Languages</p>
+          <strong className="brand-title">Lingo Sprint</strong>
         </div>
-
-        <nav className="nav">
-          <a href="#supply-chain" className="nav-link active">电商平台工作台</a>
-          <a href="#operations" className="nav-link">后台操作台</a>
+        <nav className="desktop-nav" aria-label="primary navigation">
+          {primaryNav.map((item, index) => (
+            <Link href={item.href} key={item.label} className={index === 0 ? 'nav-pill active' : 'nav-pill'}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
+        <Link href="/learn/english" className="header-cta">开始学习</Link>
+      </header>
 
-        <div className="roadmap-card">
-          <p className="card-title">模块路线图</p>
-          <ul>
-            {roadmap.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </aside>
+      <main className="app-content">{children}</main>
 
-      <main className="content" id="supply-chain">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">Single project / Cloudflare-ready / D1-backed</p>
-            <h2>电商平台架构工作台</h2>
-          </div>
-          <div className="status-pill">Apple-inspired ERP</div>
-        </header>
-        {children}
-      </main>
+      <nav className="mobile-bottom-nav" aria-label="mobile navigation">
+        {bottomNav.map((item, index) => (
+          <Link href={item.href} key={item.label} className={index === 0 ? 'bottom-nav-item active' : 'bottom-nav-item'}>
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

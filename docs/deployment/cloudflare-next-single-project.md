@@ -1,11 +1,13 @@
-# Cloudflare deployment for the single-project Next.js ERP
+# Cloudflare deployment for the single-project Next.js language learning app
 
-This repository has been refactored into one Next.js full-stack app.
+This repository is now a single Next.js full-stack app for a mobile-first language learning product.
 
-Stack:
-- Next.js App Router
-- Route Handlers under `app/api/*`
-- Shared in-memory ERP domain layer under `lib/supply-chain/*`
+Current product focus:
+- English learning path
+- Japanese learning path
+- Mobile-first landing page
+- Course path pages under `app/learn/[track]`
+- Lesson pages under `app/lesson/[track]/[lesson]`
 - Cloudflare deployment via OpenNext for Cloudflare
 
 ## Local verification
@@ -65,19 +67,22 @@ npm run cf:deploy
 - `wrangler.toml`
 - `open-next.config.ts`
 - `next.config.ts`
-- `app/api/*`
+- `app/page.tsx`
+- `app/learn/[track]/page.tsx`
+- `app/lesson/[track]/[lesson]/page.tsx`
+- `lib/language/data.ts`
 
-## API endpoints after deployment
+## App routes after deployment
 
+- `/`
+- `/learn/english`
+- `/learn/japanese`
+- `/lesson/english/ordering-food`
+- `/lesson/japanese/restaurant-basics`
 - `/api/health`
-- `/api/supply-chain/overview`
-- `/api/supply-chain/suppliers`
-- `/api/supply-chain/warehouses`
-- `/api/supply-chain/inventory`
-- `/api/supply-chain/purchase-orders`
-- `/api/supply-chain/receipts`
 
 ## Notes
 
-- This is now one deployable Next.js project, not a separate frontend and NestJS backend.
-- Current data is still in-memory. Later you can replace it with Cloudflare D1, KV, R2, or external databases.
+- This repo still contains some older API/domain files from previous ERP/ecommerce iterations, but the primary product surface is now the language-learning experience.
+- The Cloudflare worker name can remain stable even if the public-facing product title changes.
+- If you later add persistence, you can store users, streaks, XP, lesson completion, and review queues in D1.
