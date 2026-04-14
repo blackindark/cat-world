@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircleMore, Mic2, Send, Sparkles, Users } from 'lucide-react';
 
@@ -21,6 +21,8 @@ type Thread = {
   online: string;
   messages: Message[];
 };
+
+const STORAGE_KEY = 'lingo-sprint-im-state-v1';
 
 const initialDirectThreads: Thread[] = [
   {
@@ -87,12 +89,51 @@ export function IMPlayground() {
   const [groupThreads, setGroupThreads] = useState(initialGroupThreads);
   const [selectedId, setSelectedId] = useState('dm-1');
   const [draft, setDraft] = useState('');
+  const [hydrated, setHydrated] = useState(false);
+  const messageListRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        setHydrated(true);
+        return;
+      }
+      const parsed = JSON.parse(raw) as {
+        mode?: ChatMode;
+        directThreads?: Thread[];
+        groupThreads?: Thread[];
+        selectedId?: string;
+      };
+      if (parsed.mode) setMode(parsed.mode);
+      if (parsed.directThreads?.length) setDirectThreads(parsed.directThreads);
+      if (parsed.groupThreads?.length) setGroupThreads(parsed.groupThreads);
+      if (parsed.selectedId) setSelectedId(parsed.selectedId);
+    } catch {
+      // ignore broken local state and fall back to defaults
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ mode, directThreads, groupThreads, selectedId }),
+    );
+  }, [hydrated, mode, directThreads, groupThreads, selectedId]);
 
   const threads = mode === 'direct' ? directThreads : groupThreads;
 
   const selectedThread = useMemo(() => {
     return threads.find((thread) => thread.id === selectedId) ?? threads[0];
   }, [threads, selectedId]);
+
+  useEffect(() => {
+    if (!messageListRef.current) return;
+    messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+  }, [selectedThread]);
 
   function switchMode(nextMode: ChatMode) {
     setMode(nextMode);
@@ -104,7 +145,7 @@ export function IMPlayground() {
     const text = draft.trim();
     if (!text) return;
 
-    const nextMessage = {
+    const nextMessage: Message = {
       id: `${selectedId}-${Date.now()}`,
       sender: 'You',
       text,
@@ -137,6 +178,20 @@ export function IMPlayground() {
       );
     }
 
+    setDraft('');
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendMessage();
+  }
+
+  function resetConversations() {
+    window.localStorage.removeItem(STORAGE_KEY);
+    setMode('direct');
+    setDirectThreads(initialDirectThreads);
+    setGroupThreads(initialGroupThreads);
+    setSelectedId(initialDirectThreads[0].id);
     setDraft('');
   }
 
@@ -183,6 +238,7 @@ export function IMPlayground() {
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedThread.id}
+            ref={messageListRef}
             className="im-message-list"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -214,20 +270,29 @@ export function IMPlayground() {
 
         <div className="im-compose-toolbar">
           <span className="soft-chip">练习房可直接拉好友</span>
-          <button type="button" className="secondary-cta review-action-button"><Mic2 size={16} /> 语音草稿</button>
+          <div className="im-toolbar-actions">
+            <button type="button" className="secondary-cta review-action-button"><Mic2 size={16} /> 语音草稿</button>
+            <button type="button" className="secondary-cta review-action-button" onClick={resetConversations}>重置会话</button>
+          </div>
         </div>
 
-        <div className="im-compose">
+        <form className="im-compose" onSubmit={handleSubmit}>
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+              }
+            }}
             placeholder={mode === 'direct' ? '发一句更自然的表达给好友…' : '在群里发起一轮挑战…'}
             rows={3}
           />
-          <button type="button" className="primary-button fun-button im-send-button" onClick={sendMessage}>
+          <button type="submit" className="primary-button fun-button im-send-button">
             <Send size={16} /> 发送
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
