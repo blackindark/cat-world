@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell';
+import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { ReviewDeck } from '@/components/language/MotionDeck';
 
@@ -12,19 +13,21 @@ const reviewItems = [
 export default function ReviewPage() {
   return (
     <AppShell>
-      <div className="page-stack">
-        <section className="hero-card hub-hero review-hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Review hub</p>
-            <h1>Review 要像刷奖励，不该像补作业。</h1>
-            <p className="hero-text">这里先做成独立复习页。后面可以继续接入真正的间隔重复、难度回流和错题优先级。</p>
-          </div>
-        </section>
+      <PageScene>
+        <div className="page-stack">
+          <section className="hero-card hub-hero review-hero">
+            <div className="hero-copy">
+              <p className="eyebrow">Review hub</p>
+              <h1>Review 要像刷奖励，不该像补作业。</h1>
+              <p className="hero-text">这里先做成独立复习页。后面可以继续接入真正的间隔重复、难度回流和错题优先级。</p>
+            </div>
+          </section>
 
-        <SectionCard title="今日复习堆栈" description="先把最容易忘、最值得复习的内容推到你面前。">
-          <ReviewDeck items={reviewItems} />
-        </SectionCard>
-      </div>
+          <SectionCard title="今日复习堆栈" description="先把最容易忘、最值得复习的内容推到你面前。">
+            <ReviewDeck items={reviewItems} />
+          </SectionCard>
+        </div>
+      </PageScene>
     </AppShell>
   );
 }

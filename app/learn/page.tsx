@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/layout/AppShell';
+import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { LearnDeck } from '@/components/language/MotionDeck';
 
@@ -37,23 +38,25 @@ const learnCards = [
 export default function LearnHubPage() {
   return (
     <AppShell>
-      <div className="page-stack">
-        <section className="hero-card hero-premium hub-hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Learn hub</p>
-            <h1>Learn 不再是一整页里的一个角落，而是独立入口。</h1>
-            <p className="hero-text">现在点击底部 Learn，会直接进入学习中心：选语言、进路径、挑关卡，都在这个页面里完成。</p>
-            <div className="hero-actions">
-              <Link href="/learn/english" className="primary-cta">继续英语</Link>
-              <Link href="/learn/japanese" className="secondary-cta">切到日语</Link>
+      <PageScene>
+        <div className="page-stack">
+          <section className="hero-card hero-premium hub-hero">
+            <div className="hero-copy">
+              <p className="eyebrow">Learn hub</p>
+              <h1>Learn 不再是一整页里的一个角落，而是独立入口。</h1>
+              <p className="hero-text">现在点击底部 Learn，会直接进入学习中心：选语言、进路径、挑关卡，都在这个页面里完成。</p>
+              <div className="hero-actions">
+                <Link href="/learn/english" className="primary-cta">继续英语</Link>
+                <Link href="/learn/japanese" className="secondary-cta">切到日语</Link>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <SectionCard title="学习中心" description="这一页就是 Learn tab 对应的独立页面。">
-          <LearnDeck cards={learnCards} />
-        </SectionCard>
-      </div>
+          <SectionCard title="学习中心" description="这一页就是 Learn tab 对应的独立页面。">
+            <LearnDeck cards={learnCards} />
+          </SectionCard>
+        </div>
+      </PageScene>
     </AppShell>
   );
 }

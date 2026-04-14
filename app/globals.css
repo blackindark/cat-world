@@ -89,6 +89,25 @@ button, input, select, textarea { font: inherit; }
   font-weight: 700;
 }
 
+.nav-pill {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-active-bg,
+.bottom-nav-active-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(88, 204, 2, 0.14);
+}
+
+.nav-pill-label,
+.bottom-nav-content {
+  position: relative;
+  z-index: 1;
+}
+
 .nav-pill,
 .header-cta,
 .primary-cta,
@@ -552,8 +571,8 @@ button, input, select, textarea { font: inherit; }
   bottom: 14px;
   z-index: 30;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(23, 50, 31, 0.08);
@@ -563,14 +582,22 @@ button, input, select, textarea { font: inherit; }
 }
 
 .bottom-nav-item {
-  min-height: 44px;
+  position: relative;
+  overflow: hidden;
+  min-height: 52px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+  border-radius: 18px;
+}
+
+.bottom-nav-content {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
 }
 
 .bottom-nav-item.active {
-  background: rgba(88, 204, 2, 0.12);
   color: #2e7d00;
 }
 
@@ -1281,6 +1308,10 @@ button, input, select, textarea { font: inherit; }
   background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(240,251,245,0.92));
 }
 
+.im-hero {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,255,0.94));
+}
+
 .hub-grid,
 .profile-grid {
   display: grid;
@@ -1344,6 +1375,145 @@ button, input, select, textarea { font: inherit; }
   justify-items: center;
 }
 
+.page-scene {
+  width: 100%;
+}
+
+.im-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.im-sidebar,
+.im-chat-panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(23,50,31,0.06);
+}
+
+.im-mode-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px;
+  background: rgba(23,50,31,0.05);
+  border-radius: 999px;
+}
+
+.im-mode,
+.im-thread,
+.im-chip {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.im-mode {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  font-weight: 700;
+}
+
+.im-mode.active {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 8px 18px rgba(23,50,31,0.08);
+}
+
+.im-thread-list,
+.im-message-list,
+.im-quick-replies {
+  display: grid;
+  gap: 10px;
+}
+
+.im-thread {
+  text-align: left;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(23,50,31,0.06);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.im-thread.active {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(23,50,31,0.06);
+}
+
+.im-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.im-message-list {
+  min-height: 300px;
+}
+
+.im-message {
+  width: min(100%, 82%);
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px 18px 18px 8px;
+  background: rgba(245,240,255,0.92);
+  border: 1px solid rgba(23,50,31,0.06);
+}
+
+.im-message.mine {
+  margin-left: auto;
+  border-radius: 18px 18px 8px 18px;
+  background: rgba(232,255,226,0.92);
+}
+
+.im-message-sender {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.im-chip {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(23,50,31,0.05);
+  color: var(--text);
+}
+
+.im-compose {
+  display: grid;
+  gap: 12px;
+}
+
+.im-compose textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
+.im-send-button {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 @media (min-width: 768px) {
   .app-shell {
     padding: 28px 24px 40px;
@@ -1380,7 +1550,8 @@ button, input, select, textarea { font: inherit; }
   .mascot-grid,
   .playful-lesson-grid,
   .hub-grid,
-  .profile-grid {
+  .profile-grid,
+  .im-shell {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell';
+import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { CoachDeck } from '@/components/language/MotionDeck';
 
@@ -23,19 +24,21 @@ const prompts = [
 export default function CoachPage() {
   return (
     <AppShell>
-      <div className="page-stack">
-        <section className="hero-card hub-hero coach-hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Coach hub</p>
-            <h1>Coach 现在也有自己的页面，不再挤在长页面里。</h1>
-            <p className="hero-text">这一页专门承接陪练、纠错和场景模拟。后面继续接语音、打分和更强的 AI 教练逻辑。</p>
-          </div>
-        </section>
+      <PageScene>
+        <div className="page-stack">
+          <section className="hero-card hub-hero coach-hero">
+            <div className="hero-copy">
+              <p className="eyebrow">Coach hub</p>
+              <h1>Coach 现在也有自己的页面，不再挤在长页面里。</h1>
+              <p className="hero-text">这一页专门承接陪练、纠错和场景模拟。后面继续接语音、打分和更强的 AI 教练逻辑。</p>
+            </div>
+          </section>
 
-        <SectionCard title="陪练入口" description="先把最能让用户感到被陪伴的入口放到一起。">
-          <CoachDeck prompts={prompts} />
-        </SectionCard>
-      </div>
+          <SectionCard title="陪练入口" description="先把最能让用户感到被陪伴的入口放到一起。">
+            <CoachDeck prompts={prompts} />
+          </SectionCard>
+        </div>
+      </PageScene>
     </AppShell>
   );
 }

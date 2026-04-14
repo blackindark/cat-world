@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { BrainCircuit, Flame, Layers3, Mic2, Sparkles, Star, Trophy, UserRound } from 'lucide-react';
+import { BrainCircuit, Flame, Layers3, MessageCircleMore, Mic2, Sparkles, Star, Trophy, UserRound } from 'lucide-react';
 
 type LearnCard = {
   title: string;
@@ -39,6 +39,7 @@ const iconMap = {
   trophy: Trophy,
   star: Star,
   user: UserRound,
+  message: MessageCircleMore,
 };
 
 const container = {

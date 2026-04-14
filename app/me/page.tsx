@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell';
+import { PageScene } from '@/components/layout/PageScene';
 import { SectionCard } from '@/components/supply-chain/SectionCard';
 import { MeDeck } from '@/components/language/MotionDeck';
 
@@ -12,19 +13,21 @@ const stats = [
 export default function MePage() {
   return (
     <AppShell>
-      <div className="page-stack">
-        <section className="hero-card hub-hero me-hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Me hub</p>
-            <h1>Me 是你的学习档案，不再只是首页底下的一块信息。</h1>
-            <p className="hero-text">把 streak、XP、掌握度、吉祥物关系值和未来的个性化推荐，都放到这个独立页面。</p>
-          </div>
-        </section>
+      <PageScene>
+        <div className="page-stack">
+          <section className="hero-card hub-hero me-hero">
+            <div className="hero-copy">
+              <p className="eyebrow">Me hub</p>
+              <h1>Me 是你的学习档案，不再只是首页底下的一块信息。</h1>
+              <p className="hero-text">把 streak、XP、掌握度、吉祥物关系值和未来的个性化推荐，都放到这个独立页面。</p>
+            </div>
+          </section>
 
-        <SectionCard title="你的进度面板" description="这是 Me tab 对应的新页面，后面可以继续接 D1 和真实用户数据。">
-          <MeDeck stats={stats} />
-        </SectionCard>
-      </div>
+          <SectionCard title="你的进度面板" description="这是 Me tab 对应的新页面，后面可以继续接 D1 和真实用户数据。">
+            <MeDeck stats={stats} />
+          </SectionCard>
+        </div>
+      </PageScene>
     </AppShell>
   );
 }
