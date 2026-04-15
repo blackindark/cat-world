@@ -23,7 +23,7 @@ export default async function IMPage() {
           </section>
 
           <SectionCard title="交流中心" description="现在底部已经多了一个 IM tab，对应的就是这个独立页面。">
-            <IMPlayground />
+            <IMPlayground overview={overview} />
           </SectionCard>
 
           <SectionCard title="社交管理台" description="开始把好友、群聊和消息数据往 D1-backed 结构推进。">

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
-import { Users } from 'lucide-react';
+import { Search, Users } from 'lucide-react';
 import type { ImOverview } from '@/lib/im/types';
 
 export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
@@ -11,8 +11,20 @@ export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedMembers, setSelectedMembers] = useState<string[]>(overview.friends.slice(0, 2).map((friend) => friend.id));
+  const [friendQuery, setFriendQuery] = useState('');
+  const [groupQuery, setGroupQuery] = useState('');
 
   const friendIds = useMemo(() => new Set(selectedMembers), [selectedMembers]);
+  const filteredFriends = useMemo(() => {
+    const query = friendQuery.trim().toLowerCase();
+    if (!query) return overview.friends;
+    return overview.friends.filter((friend) => `${friend.displayName} ${friend.statusText}`.toLowerCase().includes(query));
+  }, [friendQuery, overview.friends]);
+  const filteredGroups = useMemo(() => {
+    const query = groupQuery.trim().toLowerCase();
+    if (!query) return overview.groups;
+    return overview.groups.filter((group) => `${group.title} ${group.roomNote} ${group.preview}`.toLowerCase().includes(query));
+  }, [groupQuery, overview.groups]);
 
   async function createGroup(formData: FormData) {
     setError(null);
@@ -55,8 +67,12 @@ export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
             <p className="muted">这些数据现在已经可以从 D1 读出来，后面可以继续接搜索、邀请和备注。</p>
           </div>
         </div>
+        <label className="im-search-box compact-search-box">
+          <Search size={16} />
+          <input value={friendQuery} onChange={(event) => setFriendQuery(event.target.value)} placeholder="搜索好友" />
+        </label>
         <div className="friend-grid">
-          {overview.friends.map((friend) => (
+          {filteredFriends.map((friend) => (
             <article key={friend.id} className="friend-card">
               <div className="friend-avatar">{friend.avatarEmoji}</div>
               <div>
@@ -66,6 +82,7 @@ export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
               <span className="soft-chip">{friend.streakDays} 天</span>
             </article>
           ))}
+          {filteredFriends.length === 0 ? <p className="muted">没有匹配的好友。</p> : null}
         </div>
       </section>
 
@@ -93,7 +110,7 @@ export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
             <input name="roomNote" placeholder="比如：每晚 10 分钟口语接龙" required />
           </label>
           <div className="member-pick-grid">
-            {overview.friends.map((friend) => (
+            {filteredFriends.map((friend) => (
               <button
                 type="button"
                 key={friend.id}
@@ -110,6 +127,35 @@ export function IMCommunityWorkbench({ overview }: { overview: ImOverview }) {
           {message ? <p className="form-message success">{message}</p> : null}
           {error ? <p className="form-message error">{error}</p> : null}
         </form>
+      </section>
+
+      <section className="panel community-card community-card-wide">
+        <div className="section-header">
+          <div>
+            <h3>群聊目录</h3>
+            <p className="muted">现在已经能读到 D1-backed 的群信息，后面继续接进聊天线程列表。</p>
+          </div>
+        </div>
+        <label className="im-search-box compact-search-box">
+          <Search size={16} />
+          <input value={groupQuery} onChange={(event) => setGroupQuery(event.target.value)} placeholder="搜索群聊和主题" />
+        </label>
+        <div className="friend-grid">
+          {filteredGroups.map((group) => (
+            <article key={group.id} className="friend-card group-directory-card">
+              <div>
+                <strong>{group.title}</strong>
+                <p className="muted">#{group.roomNote}</p>
+                <p className="muted">{group.preview}</p>
+              </div>
+              <div className="group-meta-stack">
+                <span className="soft-chip">{group.memberCount} 人</span>
+                <span className="soft-chip">{group.onlineLabel}</span>
+              </div>
+            </article>
+          ))}
+          {filteredGroups.length === 0 ? <p className="muted">没有匹配的群聊。</p> : null}
+        </div>
       </section>
     </div>
   );
